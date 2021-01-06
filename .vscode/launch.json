@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      //"preLaunchTask": "npm: start",
+      "name": "Edge with Webpack Debugging Server",
+      "type": "edge",
+      "version": "canary",
+      "request": "launch",
+      "url": "http://localhost:3300",
+      "webRoot": "${workspaceRoot}/src",
+      // "trace": true,
+      "smartStep": true,
+      "skipFiles": [
+        "${workspaceFolder}/src/node_modules/tslib/*.js",
+      ],
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*"
+      },
+      "internalConsoleOptions": "openOnSessionStart"
+    },
+  ]
+}
