@@ -440,31 +440,21 @@ export class LiquidityAdd {
 }
 
 interface ILiquidityModel {
-  bPool: any,
   poolBalances: Map<Address, BigNumber>;
   connected: boolean;
-  crPool: any,
   liquidityJoinPool(poolAmountOut, maxAmountsIn): Promise<void>;
   liquidityJoinswapExternAmountIn(tokenIn, tokenAmountIn, minPoolAmountOut): Promise<void>;
-  liquidityExit(bPrimeAmount, minAmountsOut): Promise<void>;
-  liquidityExitswapPoolAmountIn(tokenAddress, bPrimeAmount, minTokenAmountOut): Promise<void>;
   liquiditySetTokenAllowance(tokenAddress: Address, amount: BigNumber): Promise<void>;
-  remove: boolean; // if falsy then add
   swapfee: BigNumber;
   userBPrimeBalance: BigNumber;
   userPrimeBalance: BigNumber;
   userWethBalance: BigNumber;
-  poolUsersBPrimeShare: number;
   poolTotalDenormWeights: Map<string, BigNumber>;
-  poolTokenNormWeights: Map<Address, BigNumber>;
   poolTokenAddresses: Array<Address>;
   poolTokenAllowances: Map<Address, BigNumber>;
-  poolUsersTokenShare: Map<Address, BigNumber>;
-  primeToken: any;
   primeTokenAddress: Address;
   poolTotalBPrimeSupply: BigNumber;
   poolTotalDenormWeight: BigNumber;
-  weth: any;
   wethTokenAddress: Address;
   userTokenBalances: Map<Address, BigNumber>;
 }
