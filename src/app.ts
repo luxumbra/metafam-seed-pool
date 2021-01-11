@@ -63,21 +63,24 @@ export class App {
       {
         moduleId: PLATFORM.moduleName("./dashboard/dashboard"),
         name: "dashboard",
-        nav: false,
         route: ["", "/"],
         title: "",
       }
       , {
-        moduleId: PLATFORM.moduleName("./liquidity/liquidity"),
-        name: "liquidity",
-        nav: false,
-        route: ["liquidity"],
-        title: "Liquidity",
+        moduleId: PLATFORM.moduleName("./liquidity/add"),
+        name: "liquidityAdd",
+        route: ["liquidity/add"],
+        title: "Add Liquidity",
+      }
+      , {
+        moduleId: PLATFORM.moduleName("./liquidity/remove"),
+        name: "liquidityRemove",
+        route: ["liquidity/remove"],
+        title: "Remove Liquidity",
       }
       , {
         moduleId: PLATFORM.moduleName("./staking/staking"),
         name: "staking",
-        nav: false,
         route: ["staking"],
         title: "Staking",
       },

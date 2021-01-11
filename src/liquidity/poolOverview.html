@@ -1,0 +1,42 @@
+<template bindable="bPoolAddress,connected,poolUsersBPrimeShare,swapfee,poolTotalDenormWeights">
+  <div class="heading heading3">Pool Overview</div>
+  <div class="body">
+    <div class="dataGroup">
+      <etherscanlink
+        address.to-view="bPoolAddress"
+        text.to-view="bPoolAddress | smallHexString"></etherscanlink>
+    </div>
+    <div class="dataGroup">
+      <label>My share:</label>
+      <div class="value" if.to-view="connected">
+        <formatted-number value.to-view="poolUsersBPrimeShare * 100"
+          average="false"
+          mantissa="2"
+          placement.to-view="top"></formatted-number>%
+      </div>
+      <div else class="value">--</div>
+    </div>
+    <div class="dataGroup">
+      <label>Swap fee:</label>
+      <formatted-number value.to-view="swapfee.mul(100) | ethwei"
+        average="false"
+        mantissa="2"
+        placement.to-view="top"></formatted-number>%
+    </div>
+    <div class="assets" with.bind="poolTotalDenormWeights">
+      <div><img src=" /PD_APP_ICON_PD_01.svg" />
+        <formatted-number
+          value.to-view="primeWeight | ethwei"
+          average="false"
+          mantissa="2"
+          placement.to-view="top"></formatted-number>% PRIME
+      </div>
+      <div><img src="/PD_APP_ICON_ETH_01.svg" />
+        <formatted-number value.to-view="wethWeight | ethwei"
+          average="false"
+          mantissa="2"
+          placement.to-view="top"></formatted-number>% WETH
+      </div>
+    </div>
+  </div>
+</template>

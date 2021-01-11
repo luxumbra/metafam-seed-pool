@@ -312,13 +312,12 @@ export class Dashboard {
     if (this.ensureConnected()) {
       Object.assign(this,
         {
-          remove,
           bPoolAddress: this.contractsService.getContractAddress(ContractNames.BPOOL),
         });
-
-      const theRoute = this.router.routes.find(x => x.name === "liquidity");
+      const routeName = remove ? "liquidityRemove" : "liquidityAdd";
+      const theRoute = this.router.routes.find(x => x.name === routeName);
       theRoute.settings.state = this;
-      this.router.navigateToRoute("liquidity");
+      this.router.navigateToRoute(routeName);
     }
   }
 
