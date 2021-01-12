@@ -16,6 +16,36 @@ interface IEIP1193 {
   on(eventName: "disconnect", handler: (error: { code: number; message: string }) => void);
 }
 
+export type Address = string;
+export type Hash = string;
+
+interface IBlockInfoInternal {
+  hash: Hash;
+  /**
+   * previous block
+   */
+  parentHash: Hash;
+  /**
+   *The height(number) of this
+   */
+  number: number;
+  timestamp: number
+  /**
+   * The maximum amount of gas that this block was permitted to use.This is a value that can be voted up or voted down by miners and is used to automatically adjust the bandwidth requirements of the network.
+   *
+   */
+  gasLimit: BigNumber;
+  /**
+  * The total amount of gas used by all transactions in this
+   */
+  gasUsed: BigNumber
+  transactions: Array<Hash>;
+}
+
+export interface IBlockInfo extends IBlockInfoInternal {
+  blockDate: Date;
+}
+
 export type AllowedNetworks = "mainnet" | "kovan" | "rinkeby";
 
 export enum Networks {
@@ -76,6 +106,12 @@ export class EthereumService {
 
   private blockSubscribed: boolean;
 
+  private handleNewBlock = async (blockNumber: number): Promise<void> => {
+    const block: Partial<IBlockInfo> = await this.readOnlyProvider.getBlock(blockNumber);
+    this._lastBlockDate = block.blockDate = new Date(block.timestamp * 1000);
+    this.eventAggregator.publish("Network.NewBlock", block);
+  }
+
   public initialize(network: AllowedNetworks): void {
 
     if (!network) {
@@ -95,10 +131,8 @@ export class EthereumService {
     this.readOnlyProvider = ethers.getDefaultProvider(EthereumService.ProviderEndpoints[this.targetedNetwork]);
 
     if (!this.blockSubscribed) {
-      this.readOnlyProvider.on("block", () => {
-        this.eventAggregator.publish("Network.NewBlock");
-        this.blockSubscribed = true;
-      });
+      this.readOnlyProvider.on("block", (blockNumber: number) => this.handleNewBlock(blockNumber));
+      this.blockSubscribed = true;
     }
   }
 
@@ -251,9 +285,31 @@ export class EthereumService {
     this.walletProvider = undefined;
     this.fireDisconnectHandler(error);
   }
-}
 
-export type Address = string;
+  private _lastBlockDate: Date;
+
+  public get lastBlockDate(): Date {
+    return this._lastBlockDate;
+  }
+
+  /**
+   * so unit tests will be able to complete
+   */
+  public dispose(): void {
+    this.readOnlyProvider.off("block", (blockNumber: number) => this.handleNewBlock(blockNumber));
+  }
+
+  public ensureConnected(): boolean {
+    if (!this.defaultAccountAddress) {
+      // TODO: make this await until we're either connected or not?
+      this.connect();
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+}
 
 export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
   return parseEther(ethValue.toString());
@@ -262,3 +318,5 @@ export const toWei = (ethValue: BigNumber | string | number): BigNumber => {
 export const fromWei = (weiValue: BigNumber | string): string => {
   return formatEther(weiValue.toString());
 };
+
+export const NULL_HASH = "0x0000000000000000000000000000000000000000000000000000000000000000";

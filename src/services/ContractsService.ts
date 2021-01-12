@@ -1,5 +1,5 @@
 import { Contract, ethers, Signer } from "ethers";
-import { Address, EthereumService, IChainEventInfo } from "services/EthereumService";
+import { Address, EthereumService, Hash, IChainEventInfo } from "services/EthereumService";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 
@@ -19,6 +19,12 @@ export enum ContractNames {
   //  , PrimeDAO = "Avatar"
   , IERC20 = "IERC20"
   ,
+}
+
+export interface IStandardEvent {
+  args: any;
+  transactionHash: Hash;
+  blockNumber: number;
 }
 
 interface INetworkContractAddresses {
@@ -85,6 +91,8 @@ export class ContractsService {
     this.eventAggregator.subscribe("Network.Changed.Id", (info: IChainEventInfo): void => {
       networkChange(info);
     });
+
+    this.initializeContracts();
   }
 
   private setInitializingContracts(): void {
@@ -109,7 +117,17 @@ export class ContractsService {
     return this.initializingContracts;
   }
 
-  public initializeContracts(): void {
+  private createProvider() {
+    let signerOrProvider;
+    if (this.accountAddress) {
+      signerOrProvider = Signer.isSigner(this.accountAddress) ? this.accountAddress : this.networkInfo.provider.getSigner(this.accountAddress);
+    } else {
+      signerOrProvider = this.ethereumService.readOnlyProvider;
+    }
+    return signerOrProvider;
+  }
+
+  private initializeContracts(): void {
     if (!ContractAddresses || !ContractAddresses[this.ethereumService.targetedNetwork]) {
       throw new Error("initializeContracts: ContractAddresses not set");
     }
@@ -121,17 +139,10 @@ export class ContractsService {
       this.setInitializingContracts();
     }
 
-    const networkInfo = this.networkInfo;
-
     const reuseContracts = // at least one random contract already exists
       ContractsService.Contracts.get(ContractNames.ConfigurableRightsPool);
 
-    let signerOrProvider;
-    if (this.accountAddress) {
-      signerOrProvider = Signer.isSigner(this.accountAddress) ? this.accountAddress : networkInfo.provider.getSigner(this.accountAddress);
-    } else {
-      signerOrProvider = this.ethereumService.readOnlyProvider;
-    }
+    const signerOrProvider = this.createProvider();
 
     ContractsService.Contracts.forEach((_contract, contractName) => {
       let contract;
@@ -146,10 +157,13 @@ export class ContractsService {
       }
       ContractsService.Contracts.set(contractName, contract);
     });
+
+    this.eventAggregator.publish("Contracts.Changed");
+
     this.resolveInitializingContracts();
   }
 
-  public async getContractFor(contractName: ContractNames): Promise<any> {
+  public async getContractFor(contractName: ContractNames): Promise<Contract & any> {
     await this.assertContracts();
     return ContractsService.Contracts.get(contractName);
   }
@@ -160,7 +174,12 @@ export class ContractsService {
 
   public getContractAddress(contractName: ContractNames): Address {
     return ContractAddresses[this.ethereumService.targetedNetwork][contractName];
-    // const contract = ContractsService.Contracts.get(contractName);
-    // return contract.address || await contract.signer.getAddress();
+  }
+
+  public getContractAtAddress(contractName: ContractNames, address: Address): Contract & any {
+    return new ethers.Contract(
+      address,
+      this.getContractAbi(contractName),
+      this.createProvider());
   }
 }
