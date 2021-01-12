@@ -22,7 +22,6 @@ export class Dashboard {
   private stakingRewards: any;
   private primeToken: any;
   private bPrimeToken: any;
-  // private usdcToken: any;
   private connected = false;
   private liquidityBalance: number;
   private swapfee: BigNumber;

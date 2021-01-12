@@ -6,6 +6,7 @@ import { calcSingleOutGivenPoolIn } from "services/BalancerPoolLiquidity/helpers
 import { Address } from "services/EthereumService";
 import "./liquidity.scss";
 import BigNumberJs from "services/BigNumberService";
+import { Redirect } from 'aurelia-router';
 
 const BALANCE_BUFFER = 0.01;
 
@@ -21,6 +22,12 @@ export class LiquidityRemove {
   private _bPrimeAmount: BigNumber;
   private _primeSelected = false;
   private _wethSelected = false;
+
+  public canActivate(_model: unknown, routeConfig: { settings: { state: ILiquidityModel } }): Redirect | undefined {
+    if (!routeConfig.settings.state) {
+      return new Redirect("");
+    }
+  }
 
   public activate(_model: unknown, routeConfig: { settings: { state: ILiquidityModel } }): void {
     this.model = routeConfig.settings.state;
