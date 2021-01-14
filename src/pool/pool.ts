@@ -1,7 +1,7 @@
 import { autoinject, singleton, computedFrom } from "aurelia-framework";
 import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
-import "./dashboard.scss";
+import "./pool.scss";
 import { EventAggregator } from "aurelia-event-aggregator";
 import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService, fromWei } from "services/EthereumService";
@@ -14,7 +14,7 @@ import { NumberService } from "services/numberService";
 
 @singleton(false)
 @autoinject
-export class Dashboard {
+export class Pool {
   private initialized = false;
   private weth: any;
   private crPool: any;

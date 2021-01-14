@@ -61,18 +61,48 @@ export class App {
      */
     config.map([
       {
-        moduleId: PLATFORM.moduleName("./dashboard/dashboard"),
-        name: "dashboard",
-        route: ["", "/"],
-        title: "",
+        moduleId: PLATFORM.moduleName("./home/home"),
+        nav: true,
+        name: "home",
+        route: ["", "/", "home"],
+        title: "Home",
       }
       , {
-        moduleId: PLATFORM.moduleName("./liquidity/add"),
-        name: "liquidityAdd",
-        route: ["liquidity/add"],
-        title: "Add Liquidity",
+        moduleId: PLATFORM.moduleName("./pools/pools"),
+        nav: true,
+        name: "pools",
+        route: ["pools"],
+        title: "Pools",
       }
       , {
+        moduleId: PLATFORM.moduleName("./txHistory/tx-history"),
+        nav: true,
+        name: "txHistory",
+        route: ["txHistory"],
+        title: "Transaction History",
+      }
+      , {
+        moduleId: PLATFORM.moduleName("./documentation/documentation"),
+        nav: true,
+        name: "documentation",
+        route: ["documentation"],
+        title: "Documentation",
+      }
+      , {
+        moduleId: PLATFORM.moduleName("./primeToken/prime-token"),
+        nav: true,
+        name: "primeToken",
+        route: ["primeToken"],
+        title: "The PRIME Token",
+      }
+      , 
+      {
+        moduleId: PLATFORM.moduleName("./pool/pool"),
+        name: "pool",
+        route: ["pool:address"],
+        title: "Pool",
+      }
+            , {
         moduleId: PLATFORM.moduleName("./liquidity/remove"),
         name: "liquidityRemove",
         route: ["liquidity/remove"],
@@ -86,7 +116,7 @@ export class App {
       },
     ]);
 
-    config.fallbackRoute("");
+    config.fallbackRoute("home");
 
     this.router = router;
   }

@@ -17,7 +17,7 @@ export function configure(aurelia: Aurelia): void {
       configuration.settings.keyboard = false;
     })
     .globalResources([
-      PLATFORM.moduleName("dashboard/dashboard"),
+      // PLATFORM.moduleName("dashboard/dashboard"),
     ]);
 
   aurelia.use.developmentLogging(environment.debug ? "debug" : "info");

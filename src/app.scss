@@ -1,11 +1,17 @@
 @import "styles/colors.scss";
 .appWrapper {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "header header"
+    "sidebar mainContent"
+    "footer footer";
   height: 100%;
   padding-top: 76px; // header
 
   .appHeader {
+    grid-area: header;
     text-align: right;
     display: flex;
     align-items: center;
@@ -44,7 +50,22 @@
     }
   }
 
+  .sidebar {
+    grid-area: sidebar;
+    padding: 20px;
+
+    a {
+      display: block;
+      margin-bottom: 16px;
+    }
+  }
+
+  .mainContent {
+    grid-area: mainContent;
+  }
+
   .appFooter {
+    grid-area: footer;
     display: flex;
     align-items: center;
     padding: 16px;
