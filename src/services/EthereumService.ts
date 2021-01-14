@@ -29,14 +29,13 @@ interface IBlockInfoInternal {
    *The height(number) of this
    */
   number: number;
-  timestamp: number
+  timestamp: number;
   /**
-   * The maximum amount of gas that this block was permitted to use.This is a value that can be voted up or voted down by miners and is used to automatically adjust the bandwidth requirements of the network.
-   *
+   * The maximum amount of gas that this block was permitted to use. This is a value that can be voted up or voted down by miners and is used to automatically adjust the bandwidth requirements of the network.
    */
   gasLimit: BigNumber;
   /**
-  * The total amount of gas used by all transactions in this
+   * The total amount of gas used by all transactions in this
    */
   gasUsed: BigNumber
   transactions: Array<Hash>;
@@ -107,8 +106,8 @@ export class EthereumService {
   private blockSubscribed: boolean;
 
   private handleNewBlock = async (blockNumber: number): Promise<void> => {
-    const block: Partial<IBlockInfo> = await this.readOnlyProvider.getBlock(blockNumber);
-    this._lastBlockDate = block.blockDate = new Date(block.timestamp * 1000);
+    const block = await this.getBlock(blockNumber);
+    this._lastBlockDate = block.blockDate;
     this.eventAggregator.publish("Network.NewBlock", block);
   }
 
@@ -308,6 +307,12 @@ export class EthereumService {
     else {
       return true;
     }
+  }
+
+  public async getBlock(blockNumber: number): Promise<IBlockInfo> {
+    const block = await this.readOnlyProvider.getBlock(blockNumber) as unknown as IBlockInfo;
+    block.blockDate = new Date(block.timestamp * 1000);
+    return block;
   }
 }
 

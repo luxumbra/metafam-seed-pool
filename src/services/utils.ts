@@ -1,6 +1,6 @@
 export class Utils {
   public static sleep(milliseconds: number): Promise<any> {
-    return new Promise((resolve: () => void): any => setTimeout(resolve, milliseconds));
+    return new Promise((resolve: (args: any[]) => void): any => setTimeout(resolve, milliseconds));
   }
 
   public static smallHexString(str: string): string {
@@ -19,20 +19,6 @@ export class Utils {
   //     }
   //   }
   //   return temp;
-  // }
-
-  /**
-   * Returns the last mined block in the chain.
-   */
-  // public static async lastBlockDate(web3: Web3): Promise<Date> {
-  //   let block;
-  //   do {
-  //     block = await (Promise as any).promisify((callback: any): any =>
-  //       web3.eth.getBlock("latest", callback))() as BlockWithoutTransactionData;
-  //   }
-  //   while (!block);
-
-  //   return new Date(block.timestamp * 1000);
   // }
 
   /**
