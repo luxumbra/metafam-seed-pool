@@ -1,27 +1,27 @@
 .txHistory {
+  padding: 20px;
+
   .heading1 {
     padding-bottom: 30px;
   }
 
   .body {
-    padding-left: 20px;
-
     .loading {
-      padding-left: 80px;
-
+      display: flex;
       i {
+        margin-right: 6px;
         font-size: 22px;
       }
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-template-rows: auto;
-
-      .cell.hash {
-        font-family: monospace;
-        font-size: 15px;
+    .gridArea {
+      .reloadButton {
+        margin-bottom: 16px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-template-rows: auto;
       }
     }
   }

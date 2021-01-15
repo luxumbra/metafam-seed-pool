@@ -19,7 +19,7 @@ interface IEIP1193 {
 export type Address = string;
 export type Hash = string;
 
-interface IBlockInfoInternal {
+export interface IBlockInfoNative {
   hash: Hash;
   /**
    * previous block
@@ -41,7 +41,7 @@ interface IBlockInfoInternal {
   transactions: Array<Hash>;
 }
 
-export interface IBlockInfo extends IBlockInfoInternal {
+export interface IBlockInfo extends IBlockInfoNative {
   blockDate: Date;
 }
 

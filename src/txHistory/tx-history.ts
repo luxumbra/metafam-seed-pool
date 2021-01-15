@@ -37,6 +37,7 @@ interface ITransaction {
   assetsIn: Array<IAssetTokenTxInfo>;
   assetsOut: Array<IAssetTokenTxInfo>;
   hash: Hash;
+  etherscanUrl: string;
   poolName: string;
 }
 
@@ -78,6 +79,10 @@ export class TxHistory {
     return this.getData();
   }
 
+  reload() {
+    this.getData(true);
+  }
+  
   async getData(reload = false): Promise<void> {
 
     if (reload || !this.transactions) {
@@ -99,10 +104,12 @@ export class TxHistory {
         for (const event of txJoinEvents) {
           const eventArgs: IJoinEventArgs = event.args;
           joins.push({
-            date: (await this.ethereumService.getBlock(event.blockNumber)).blockDate,
+            // date: (await this.ethereumService.getBlock(event.blockNumber)).blockDate,
+            date: new Date((await event.getBlock()).timestamp * 1000),
             actionDescription: "Buy Pool Shares",
             assetsIn: new Array<IAssetTokenTxInfo>(),
             assetsOut: new Array<IAssetTokenTxInfo>(),
+            etherscanUrl: this.transactionsService.getEtherscanLink(event.transactionHash),
             hash: event.transactionHash,
             poolName: "PRIME Pool",
           });
@@ -117,6 +124,7 @@ export class TxHistory {
             actionDescription: "Sell Pool Shares",
             assetsIn: new Array<IAssetTokenTxInfo>(),
             assetsOut: new Array<IAssetTokenTxInfo>(),
+            etherscanUrl: this.transactionsService.getEtherscanLink(event.transactionHash),
             hash: event.transactionHash,
             poolName: "PRIME Pool",
           });
@@ -124,7 +132,7 @@ export class TxHistory {
 
         this.transactions = joins.concat(exits).sort((a: ITransaction, b: ITransaction) =>
           SortService.evaluateDateTime(a.date.toISOString(), b.date.toISOString()));
-          
+
       } catch(ex) {
 
       }

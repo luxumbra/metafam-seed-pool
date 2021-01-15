@@ -1,5 +1,5 @@
 import { Contract, ethers, Signer } from "ethers";
-import { Address, EthereumService, Hash, IChainEventInfo } from "services/EthereumService";
+import { Address, EthereumService, Hash, IBlockInfoNative, IChainEventInfo } from "services/EthereumService";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { autoinject } from "aurelia-framework";
 
@@ -25,6 +25,7 @@ export interface IStandardEvent {
   args: any;
   transactionHash: Hash;
   blockNumber: number;
+  getBlock(): Promise<IBlockInfoNative>;
 }
 
 interface INetworkContractAddresses {
