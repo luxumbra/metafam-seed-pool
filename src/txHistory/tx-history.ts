@@ -82,7 +82,7 @@ export class TxHistory {
   reload() {
     this.getData(true);
   }
-  
+
   async getData(reload = false): Promise<void> {
 
     if (reload || !this.transactions) {
@@ -90,47 +90,66 @@ export class TxHistory {
 
       try {
         const crPoolAddress = this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool);
+        
         const filterJoin = this.crPool.filters.LogJoin(this.ethereumService.defaultAccountAddress);
         const txJoinEvents: Array<IStandardEvent> = await this.crPool.queryFilter(filterJoin, this.startingBlockNumber);
+        
         const filterExit = this.crPool.filters.LogExit(this.ethereumService.defaultAccountAddress);
         const txExitEvents: Array<IStandardEvent> = await this.crPool.queryFilter(filterExit, this.startingBlockNumber);
+
         const filterTransferJoin = this.crPool.filters.Transfer(crPoolAddress, this.ethereumService.defaultAccountAddress);
-        const txTransferJoinEvents: Array<IStandardEvent> = await this.crPool.queryFilter(filterTransferJoin, this.startingBlockNumber);
-        const filterTransferExit = this.crPool.filters.Transfer(this.ethereumService.defaultAccountAddress, crPoolAddress);
-        const txTransferExitEvents: Array<IStandardEvent> = await this.crPool.queryFilter(filterTransferExit, this.startingBlockNumber);
-
-        const joins = new Array<ITransaction>();
+        const txJoinBpoolTransferEvents: Array<IStandardEvent> = await this.crPool.queryFilter(filterTransferJoin, this.startingBlockNumber);
         
-        for (const event of txJoinEvents) {
-          const eventArgs: IJoinEventArgs = event.args;
-          joins.push({
-            // date: (await this.ethereumService.getBlock(event.blockNumber)).blockDate,
-            date: new Date((await event.getBlock()).timestamp * 1000),
-            actionDescription: "Buy Pool Shares",
-            assetsIn: new Array<IAssetTokenTxInfo>(),
-            assetsOut: new Array<IAssetTokenTxInfo>(),
-            etherscanUrl: this.transactionsService.getEtherscanLink(event.transactionHash),
-            hash: event.transactionHash,
-            poolName: "PRIME Pool",
-          });
+        const filterTransferExit = this.crPool.filters.Transfer(this.ethereumService.defaultAccountAddress, crPoolAddress);
+        const txExitBpoolTransferEvents: Array<IStandardEvent> = await this.crPool.queryFilter(filterTransferExit, this.startingBlockNumber);
+        
+        const getAssetTransfers = (isJoin: boolean, joinExitEvents: Array<IStandardEvent>): Array<IAssetTokenTxInfo> =>
+          joinExitEvents.map((event: IStandardEvent) => { return { name: "asset", amount: event.args[isJoin ? "tokenAmountIn" : "tokenAmountOut"] }; });
+        ;
+
+        const getBpoolTransfers = (transferEvents: Array<IStandardEvent>, txHash: Hash): Array<IAssetTokenTxInfo> =>
+          transferEvents
+            .filter((event: IStandardEvent) => event.transactionHash === txHash)
+            .map((event: IStandardEvent) => { return { name: "BPOOL", amount: event.args.value }; });
+        ;
+
+        const newTx = async (isJoin: boolean, txHash, joinExitEvents: Array<IStandardEvent>, poolName: string) => {
+          let assetsIn: Array<IAssetTokenTxInfo>;
+          let assetsOut: Array<IAssetTokenTxInfo>;
+          let blockDate = new Date((await joinExitEvents[0].getBlock()).timestamp * 1000);
+          
+          if (isJoin) {
+            assetsIn = getAssetTransfers(true, joinExitEvents);
+            assetsOut = getBpoolTransfers(txJoinBpoolTransferEvents, txHash);
+          } else {
+            assetsOut = getAssetTransfers(false, joinExitEvents);
+            assetsIn = getBpoolTransfers(txExitBpoolTransferEvents, txHash);
+          }
+          
+          return {
+            date: blockDate,
+            actionDescription: isJoin ? "Buy Pool Shares" : "Sell Pool Shares",
+            assetsIn: assetsIn,
+            assetsOut: assetsOut,
+            etherscanUrl: this.transactionsService.getEtherscanLink(txHash),
+            hash: txHash,
+            poolName,
+          };
+        };
+
+        const joins = this.groupBy(txJoinEvents, txJoinEvent => txJoinEvent.transactionHash);
+        const exits = this.groupBy(txExitEvents, txExitEvent => txExitEvent.transactionHash);
+        const transactions = new Array<ITransaction>();
+
+        for (let [txHash, events] of Array.from(joins)) {
+          transactions.push(await newTx(true, txHash, events, "PRIME Pool"));
         }
 
-        const exits = new Array<ITransaction>();
-
-        for (const event of txExitEvents) {
-          const eventArgs: IExitEventArgs = event.args;
-          joins.push({
-            date: (await this.ethereumService.getBlock(event.blockNumber)).blockDate,
-            actionDescription: "Sell Pool Shares",
-            assetsIn: new Array<IAssetTokenTxInfo>(),
-            assetsOut: new Array<IAssetTokenTxInfo>(),
-            etherscanUrl: this.transactionsService.getEtherscanLink(event.transactionHash),
-            hash: event.transactionHash,
-            poolName: "PRIME Pool",
-          });
+        for (let [txHash, events] of Array.from(exits)) {
+          transactions.push(await newTx(false, txHash, events, "PRIME Pool"));
         }
 
-        this.transactions = joins.concat(exits).sort((a: ITransaction, b: ITransaction) =>
+        this.transactions = transactions.sort((a: ITransaction, b: ITransaction) =>
           SortService.evaluateDateTime(a.date.toISOString(), b.date.toISOString()));
 
       } catch(ex) {
@@ -144,5 +163,33 @@ export class TxHistory {
 
   connect(): void {
     this.ethereumService.ensureConnected();
+  }
+
+  /**
+   * @description
+   * 
+   * From here:  https://stackoverflow.com/a/38327540/4685575
+   * 
+   * Takes an Array<V>, and a grouping function,
+   * and returns a Map of the array grouped by the grouping function.
+   *
+   * @param list An array of type V.
+   * @param keyGetter A Function that takes the the Array type V as an input, and returns a value of type K.
+   *                  K is generally intended to be a property key of V.
+   *
+   * @returns Map of the array grouped by the grouping function.
+   */
+  groupBy<K, V>(list: Array<V>, keyGetter: (input: V) => K): Map<K, Array<V>> {
+    const map = new Map<K, Array<V>>();
+    list.forEach((item) => {
+      const key = keyGetter(item);
+      const collection = map.get(key);
+      if (!collection) {
+        map.set(key, [item]);
+      } else {
+        collection.push(item);
+      }
+    });
+    return map;
   }
 }

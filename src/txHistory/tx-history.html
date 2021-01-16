@@ -30,13 +30,17 @@
               <div class="cell">${tx.actionDescription}</div>
               <div class="cell">
                 <div class="assets" repeat.for="action of tx.assetsIn">
-                  <div class="amount">${action.amount}</div>
+                  <div class="amount">
+                    <formatted-number value.to-view="action.amount | ethwei"></formatted-number>
+                  </div>
                   <div class="name">${action.name}</div>
                 </div>
               </div>
               <div class="cell">
                 <div class="assets" repeat.for="action of tx.assetsOut">
-                  <div class="amount">${action.amount}</div>
+                  <div class="amount">
+                    <formatted-number value.to-view="action.amount | ethwei"></formatted-number>
+                  </div>
                   <div class="name">${action.name}</div>
                 </div>
               </div>

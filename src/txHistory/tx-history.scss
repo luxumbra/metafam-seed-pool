@@ -22,6 +22,20 @@
         display: grid;
         grid-template-columns: repeat(6, 1fr);
         grid-template-rows: auto;
+
+        .columnHeader,
+        .cell {
+          margin-bottom: 12px;
+        }
+
+        .cell {
+          .assets {
+            .amount,
+            .name {
+              display: inline-block;
+            }
+          }
+        }
       }
     }
   }
