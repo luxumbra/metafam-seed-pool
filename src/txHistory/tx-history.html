@@ -19,11 +19,19 @@
 
           <div if.to-view="!transactions.length" class="noRecordsMessage">No transactions found</div>
           <div else class="grid">
-            <div class="columnHeader">Pool</div>
+            <div class="columnHeader">Pool
+              <div class="subheader">Which pool did you interact with?</div>
+            </div>
             <div class="columnHeader">Date</div>
-            <div class="columnHeader">Type</div>
-            <div class="columnHeader">Assets In</div>
-            <div class="columnHeader">Assets Out</div>
+            <div class="columnHeader">Type
+              <div class="subheader">Which pool did you interact with?</div>
+            </div>
+            <div class="columnHeader">Assets In
+              <div class="subheader">What assets did you deposit or send for exchange??</div>
+            </div>
+            <div class="columnHeader">Assets Out
+              <div class="subheader">What assets did you withdraw or receive??</div>
+            </div>
             <div class="columnHeader">Etherscan</div>
 
             <template repeat.for="tx of transactions">
