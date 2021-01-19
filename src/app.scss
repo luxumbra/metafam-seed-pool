@@ -4,11 +4,23 @@
   grid-template-columns: 190px 1fr;
   grid-template-rows: auto;
   grid-template-areas:
-    "header header"
+    "logo header"
     "sidebar mainContent"
     "footer footer";
   height: 100%;
-  padding-top: 76px; // header
+
+  .logo {
+    grid-area: logo;
+    background-color: $color-black;
+    align-items: center;
+    // just for vertical alignment of the logo
+    display: flex;
+    justify-content: center;
+
+    img {
+      margin-right: 8px;
+    }
+  }
 
   .appHeader {
     grid-area: header;
@@ -16,26 +28,13 @@
     display: flex;
     align-items: center;
     border-bottom: 2px solid $color-white;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: $global-background-color;
+    background-color: #eeeeee;
     z-index: 10000; // so everything will scroll under it
     height: 76px;
 
-    .logo {
-      width: 96px;
-      background-color: $color-white;
-      height: 100%;
-      margin-right: 10px;
-      // just for vertical alignment of the logo
-      display: flex;
-      justify-content: center;
-    }
-
     .networkfeedback {
       color: $color-white;
-      margin-right: 10px;
+      margin-left: 10px;
       text-align: left;
       .testnet {
         color: $color-red;
@@ -62,6 +61,8 @@
 
   .mainContent {
     grid-area: mainContent;
+    background-color: $color-white;
+    color: $color-black;
   }
 
   .appFooter {

@@ -1,3 +1,4 @@
+@import "styles/colors.scss";
 .txHistory {
   padding: 20px;
 
@@ -17,23 +18,53 @@
     .gridArea {
       .reloadButton {
         margin-bottom: 16px;
+        color: $button1-color;
       }
       .grid {
         display: grid;
         grid-template-columns: repeat(6, 1fr);
         grid-template-rows: auto;
+        background-color: #eeeeee;
 
         .columnHeader,
         .cell {
-          margin-bottom: 12px;
+          padding: 16px;
+        }
+
+        .columnHeader {
+          color: $color-white;
+        }
+
+        div.columnHeader:nth-child(1) {
+          background-color: #8668fc;
+        }
+        div.columnHeader:nth-child(2) {
+          background-color: #298cdd;
+        }
+        div.columnHeader:nth-child(3) {
+          background-color: #ae5cff;
+        }
+        div.columnHeader:nth-child(4) {
+          background-color: #5bcaa9;
+        }
+        div.columnHeader:nth-child(5) {
+          background-color: #64b0c8;
+        }
+        div.columnHeader:nth-child(6) {
+          background-color: #bf62a8;
         }
 
         .cell {
+          border-bottom: 2px solid #b2b2b2;
           .assets {
             .amount,
             .name {
               display: inline-block;
             }
+          }
+
+          .etherscanLink {
+            color: $color-black;
           }
         }
       }
