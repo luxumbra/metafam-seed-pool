@@ -7,6 +7,8 @@ import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService, fromWei, Hash, Networks } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { SortService } from "services/SortService";
+import { TokenService } from "services/TokenService";
+import { EventConfigException } from "services/GeneralEvents";
 
 interface IAssetTokenTxInfo {
   amount: BigNumber;
@@ -48,6 +50,7 @@ export class TxHistory {
   startingBlockNumber: number;
   transactions: Array<ITransaction>;
   crPool: any;
+  poolTokenName: string;
   loading = false;
 
   @computedFrom("ethereumService.defaultAccountAddress")
@@ -59,7 +62,8 @@ export class TxHistory {
     private eventAggregator: EventAggregator,
     private contractsService: ContractsService,
     private ethereumService: EthereumService,
-    private transactionsService: TransactionsService) {
+    private transactionsService: TransactionsService,
+    private tokenService: TokenService) {
 
     this.startingBlockNumber = this.ethereumService.targetedNetwork === Networks.Kovan ? 22056846 : 11270397;
   }
@@ -72,10 +76,12 @@ export class TxHistory {
 
     this.eventAggregator.subscribe("Network.Changed.Account", async () => {
       await this.loadContracts();
-      this.getData();
+      this.getData(true);
     });
 
     await this.loadContracts();
+    this.poolTokenName = (await this.tokenService.getTokenInfo(this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool))).symbol;
+
     return this.getData();
   }
 
@@ -84,6 +90,11 @@ export class TxHistory {
   }
 
   async getData(reload = false): Promise<void> {
+
+    if (!this.connected) {
+      this.transactions = undefined;
+      return;
+    }
 
     if (reload || !this.transactions) {
       this.loading = true;
@@ -103,14 +114,19 @@ export class TxHistory {
         const filterTransferExit = this.crPool.filters.Transfer(this.ethereumService.defaultAccountAddress, crPoolAddress);
         const txExitBpoolTransferEvents: Array<IStandardEvent> = await this.crPool.queryFilter(filterTransferExit, this.startingBlockNumber);
         
-        const getAssetTransfers = (isJoin: boolean, joinExitEvents: Array<IStandardEvent>): Array<IAssetTokenTxInfo> =>
-          joinExitEvents.map((event: IStandardEvent) => { return { name: "asset", amount: event.args[isJoin ? "tokenAmountIn" : "tokenAmountOut"] }; });
-        ;
+        const getAssetTransfers = async (isJoin: boolean, joinExitEvents: Array<IStandardEvent>): Promise<Array<IAssetTokenTxInfo>> => {
+          const transfers = new Array<IAssetTokenTxInfo>();
+          joinExitEvents.forEach(async (event) => {
+            const tokenName = (await this.tokenService.getTokenInfo(event.args[isJoin ? "tokenIn" : "tokenOut"])).symbol;
+            transfers.push({ name: tokenName, amount: event.args[isJoin ? "tokenAmountIn" : "tokenAmountOut"] }); 
+          });
+          return transfers;
+        };
 
         const getBpoolTransfers = (transferEvents: Array<IStandardEvent>, txHash: Hash): Array<IAssetTokenTxInfo> =>
           transferEvents
             .filter((event: IStandardEvent) => event.transactionHash === txHash)
-            .map((event: IStandardEvent) => { return { name: "BPOOL", amount: event.args.value }; });
+            .map((event: IStandardEvent) => { return { name: this.poolTokenName, amount: event.args.value }; });
         ;
 
         const newTx = async (isJoin: boolean, txHash, joinExitEvents: Array<IStandardEvent>, poolName: string) => {
@@ -119,10 +135,10 @@ export class TxHistory {
           let blockDate = new Date((await joinExitEvents[0].getBlock()).timestamp * 1000);
           
           if (isJoin) {
-            assetsIn = getAssetTransfers(true, joinExitEvents);
+            assetsIn = await getAssetTransfers(true, joinExitEvents);
             assetsOut = getBpoolTransfers(txJoinBpoolTransferEvents, txHash);
           } else {
-            assetsOut = getAssetTransfers(false, joinExitEvents);
+            assetsOut = await getAssetTransfers(false, joinExitEvents);
             assetsIn = getBpoolTransfers(txExitBpoolTransferEvents, txHash);
           }
           
@@ -153,7 +169,7 @@ export class TxHistory {
           SortService.evaluateDateTime(a.date.toISOString(), b.date.toISOString()));
 
       } catch(ex) {
-
+        this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
       }
       finally {
         this.loading = false;

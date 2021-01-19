@@ -16,7 +16,9 @@
         <div if.to-view="!loading" class="gridArea">
           <i class="reloadButton fas fa-sync-alt" click.delegate="reload()"
             data-tippy-content="Refresh the transaction history"></i>
-          <div class="grid">
+
+          <div if.to-view="!transactions.length" class="noRecordsMessage">No transactions found</div>
+          <div else class="grid">
             <div class="columnHeader">Pool</div>
             <div class="columnHeader">Date</div>
             <div class="columnHeader">Type</div>
