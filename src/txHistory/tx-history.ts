@@ -50,7 +50,10 @@ export class TxHistory {
   startingBlockNumber: number;
   transactions: Array<ITransaction>;
   crPool: any;
+  stakingRewards: any;
   poolTokenName: string;
+  stakingTokenName: string;
+  stakingRewardTokenName: string;
   loading = false;
 
   @computedFrom("ethereumService.defaultAccountAddress")
@@ -70,6 +73,7 @@ export class TxHistory {
 
   async loadContracts(): Promise<void> {
     this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
+    this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
   }
 
   async attached(): Promise<void> {
@@ -80,7 +84,10 @@ export class TxHistory {
     });
 
     await this.loadContracts();
+
     this.poolTokenName = (await this.tokenService.getTokenInfo(this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool))).symbol;
+    this.stakingTokenName = (await this.tokenService.getTokenInfo(await this.stakingRewards.stakingToken())).symbol;
+    this.stakingRewardTokenName = (await this.tokenService.getTokenInfo(await this.stakingRewards.rewardToken())).symbol;
 
     return this.getData();
   }
@@ -113,7 +120,21 @@ export class TxHistory {
         
         const filterTransferExit = this.crPool.filters.Transfer(this.ethereumService.defaultAccountAddress, crPoolAddress);
         const txExitBpoolTransferEvents: Array<IStandardEvent> = await this.crPool.queryFilter(filterTransferExit, this.startingBlockNumber);
-        
+
+        const filterStaked = this.stakingRewards.filters.Staked(this.ethereumService.defaultAccountAddress);
+        const txStakedEvents: Array<IStandardEvent> = await this.stakingRewards.queryFilter(filterStaked, this.startingBlockNumber);
+
+        const filterStakeWithdrawn = this.stakingRewards.filters.Withdrawn(this.ethereumService.defaultAccountAddress);
+        const txStakeWithdrawnEvents: Array<IStandardEvent> = await this.stakingRewards.queryFilter(filterStakeWithdrawn, this.startingBlockNumber);
+
+        const filterStakeRewarded = this.stakingRewards.filters.RewardPaid(this.ethereumService.defaultAccountAddress);
+        const txStakeRewardedEvents: Array<IStandardEvent> = await this.stakingRewards.queryFilter(filterStakeRewarded, this.startingBlockNumber);
+
+        const getStakingRewardTransfer = (withdrawEvent: IStandardEvent): Array<IAssetTokenTxInfo> => {
+          return txStakeRewardedEvents.filter((event: IStandardEvent) => event.transactionHash === withdrawEvent.transactionHash)
+            .map((event: IStandardEvent) => { return { name: this.stakingRewardTokenName, amount: event.args.reward }; });
+        };
+
         const getAssetTransfers = async (isJoin: boolean, joinExitEvents: Array<IStandardEvent>): Promise<Array<IAssetTokenTxInfo>> => {
           const transfers = new Array<IAssetTokenTxInfo>();
           joinExitEvents.forEach(async (event) => {
@@ -129,7 +150,7 @@ export class TxHistory {
             .map((event: IStandardEvent) => { return { name: this.poolTokenName, amount: event.args.value }; });
         ;
 
-        const newTx = async (isJoin: boolean, txHash, joinExitEvents: Array<IStandardEvent>, poolName: string) => {
+        const newPoolTx = async (isJoin: boolean, txHash, joinExitEvents: Array<IStandardEvent>, poolName: string) => {
           let assetsIn: Array<IAssetTokenTxInfo>;
           let assetsOut: Array<IAssetTokenTxInfo>;
           let blockDate = new Date((await joinExitEvents[0].getBlock()).timestamp * 1000);
@@ -153,16 +174,40 @@ export class TxHistory {
           };
         };
 
+        const newStakingTx = async (withdraw: boolean, event: IStandardEvent, poolName: string) => {
+          let blockDate = new Date((await event.getBlock()).timestamp * 1000);
+          let txHash = event.transactionHash;
+          let txInfo = { name: this.stakingTokenName, amount: event.args["amount"] };
+
+          return {
+            date: blockDate,
+            actionDescription: withdraw ? "Liquidity Mining - Unstake Tokens" : "Liquidity Mining - Stake Tokens",
+            assetsIn: withdraw ? [] : [txInfo],
+            assetsOut: withdraw ? [txInfo].concat(getStakingRewardTransfer(event)) : [],
+            etherscanUrl: this.transactionsService.getEtherscanLink(txHash),
+            hash: txHash,
+            poolName,
+          };
+        };
+
         const joins = this.groupBy(txJoinEvents, txJoinEvent => txJoinEvent.transactionHash);
         const exits = this.groupBy(txExitEvents, txExitEvent => txExitEvent.transactionHash);
         const transactions = new Array<ITransaction>();
 
         for (let [txHash, events] of Array.from(joins)) {
-          transactions.push(await newTx(true, txHash, events, "PRIME Pool"));
+          transactions.push(await newPoolTx(true, txHash, events, "PRIME Pool"));
         }
 
         for (let [txHash, events] of Array.from(exits)) {
-          transactions.push(await newTx(false, txHash, events, "PRIME Pool"));
+          transactions.push(await newPoolTx(false, txHash, events, "PRIME Pool"));
+        }
+
+        for (let event of txStakedEvents) {
+          transactions.push(await newStakingTx(false, event, "PRIME Pool"));
+        }
+
+        for (let event of txStakeWithdrawnEvents) {
+          transactions.push(await newStakingTx(true, event, "PRIME Pool"));
         }
 
         this.transactions = transactions.sort((a: ITransaction, b: ITransaction) =>
