@@ -1,7 +1,7 @@
-export class Pools {
-  message: string;
+import "./pools.scss";
 
+export class Pools {
   constructor() {
-    this.message = 'primepool.eth';
+    
   }
 }

@@ -76,7 +76,7 @@ export class App {
         nav: true,
         name: "pools",
         route: ["pools"],
-        title: "Pools",
+        title: "All Pools",
       }
       , {
         moduleId: PLATFORM.moduleName("./txHistory/tx-history"),
