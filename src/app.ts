@@ -128,4 +128,8 @@ export class App {
   goto(where: string): void {
     Utils.goto(where);
   }
+
+  contactUs() {
+    window.open('mailto:hello@primedao.io', '#', 'noopener noreferrer');
+  }
 }

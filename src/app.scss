@@ -5,11 +5,10 @@
   grid-template-rows: auto;
   grid-template-areas:
     "logo header"
-    "sidebar mainContent"
-    "footer footer";
+    "sidebar mainContent";
   height: 100%;
 
-  .logo {
+  > .logo {
     grid-area: logo;
     background-color: $color-black;
     align-items: center;
@@ -51,17 +50,62 @@
 
   .sidebar {
     grid-area: sidebar;
-    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 0;
 
-    a.item {
-      display: block;
-      margin-bottom: 6px;
-      padding: 14px 20px;
+    .menuitems {
+      margin-bottom: 20px;
+      a.item {
+        display: block;
+        margin-bottom: 6px;
+        padding: 14px 20px;
 
-      &.active,
-      &:hover {
-        background-color: #9478ff;
-        border-right: 6px solid #694ae2;
+        &.active,
+        &:hover {
+          background-color: #9478ff;
+          border-right: 6px solid #694ae2;
+        }
+      }
+    }
+
+    .appFooter {
+      padding: 0 20px;
+
+      .links {
+        text-decoration: underline;
+        font-size: 11px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .social {
+        border-bottom: 2px solid #1ee0fc;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+
+        a {
+          img {
+            width: 16px;
+          }
+        }
+      }
+
+      .logo {
+        align-items: center;
+        display: flex;
+        img {
+          width: 24px;
+          margin-right: 6px;
+        }
+        .text {
+          font-size: 6px;
+          display: inline-block;
+        }
       }
     }
   }
@@ -71,23 +115,5 @@
     background-color: $color-white;
     color: $color-black;
     padding: 20px;
-  }
-
-  .appFooter {
-    grid-area: footer;
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    border-top: 2px solid $color-white;
-    max-height: 28px;
-
-    img {
-      width: 28px;
-      margin-right: 14px;
-    }
-    .text {
-      font-size: 10px;
-      display: inline-block;
-    }
   }
 }
