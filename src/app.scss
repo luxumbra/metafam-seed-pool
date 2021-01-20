@@ -18,7 +18,7 @@
     justify-content: center;
 
     img {
-      margin-right: 8px;
+      margin-right: 10px;
     }
   }
 
@@ -51,11 +51,18 @@
 
   .sidebar {
     grid-area: sidebar;
-    padding: 20px;
+    padding-top: 20px;
 
-    a {
+    a.item {
       display: block;
-      margin-bottom: 16px;
+      margin-bottom: 6px;
+      padding: 14px 20px;
+
+      &.active,
+      &:hover {
+        background-color: #9478ff;
+        border-right: 6px solid #694ae2;
+      }
     }
   }
 
