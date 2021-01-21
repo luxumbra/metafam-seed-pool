@@ -7,6 +7,7 @@ import "./styles/styles.scss";
 import "./app.scss";
 import { ConsoleLogService } from "services/ConsoleLogService";
 import { Utils } from "services/utils";
+import tippy from "tippy.js";
 
 @autoinject
 export class App {
@@ -24,6 +25,9 @@ export class App {
   }
 
   public attached(): void {
+    // so all elements with data-tippy-content will automatically have a tooltip
+    tippy("[data-tippy-content]");
+
     window.addEventListener("error", this.errorHandler);
 
     this.eventAggregator.subscribe("dashboard.loading", async (onOff: boolean) => {
@@ -61,34 +65,71 @@ export class App {
      */
     config.map([
       {
-        moduleId: PLATFORM.moduleName("./dashboard/dashboard"),
-        name: "dashboard",
-        nav: false,
-        route: ["", "/"],
-        title: "",
+        moduleId: PLATFORM.moduleName("./home/home"),
+        nav: true,
+        name: "home",
+        route: ["", "/", "home"],
+        title: "Home",
       }
       , {
-        moduleId: PLATFORM.moduleName("./liquidity/liquidity"),
-        name: "liquidity",
-        nav: false,
-        route: ["liquidity"],
-        title: "Liquidity",
+        moduleId: PLATFORM.moduleName("./pools/pools"),
+        nav: true,
+        name: "pools",
+        route: ["pools"],
+        title: "All Pools",
+      }
+      , {
+        moduleId: PLATFORM.moduleName("./txHistory/tx-history"),
+        nav: true,
+        name: "txHistory",
+        route: ["txHistory"],
+        title: "Transaction History",
+      }
+      , {
+        moduleId: PLATFORM.moduleName("./documentation/documentation"),
+        nav: true,
+        name: "documentation",
+        route: ["documentation"],
+        title: "Documentation",
+      }
+      , {
+        moduleId: PLATFORM.moduleName("./primeToken/prime-token"),
+        nav: true,
+        name: "primeToken",
+        route: ["primeToken"],
+        title: "The PRIME Token",
+      }
+      , 
+      {
+        moduleId: PLATFORM.moduleName("./pool/pool"),
+        name: "pool",
+        route: ["pool:address"],
+        title: "Pool",
+      }
+            , {
+        moduleId: PLATFORM.moduleName("./liquidity/remove"),
+        name: "liquidityRemove",
+        route: ["liquidity/remove"],
+        title: "Remove Liquidity",
       }
       , {
         moduleId: PLATFORM.moduleName("./staking/staking"),
         name: "staking",
-        nav: false,
         route: ["staking"],
         title: "Staking",
       },
     ]);
 
-    config.fallbackRoute("");
+    config.fallbackRoute("home");
 
     this.router = router;
   }
 
   goto(where: string): void {
     Utils.goto(where);
+  }
+
+  contactUs() {
+    window.open('mailto:hello@primedao.io', '#', 'noopener noreferrer');
   }
 }

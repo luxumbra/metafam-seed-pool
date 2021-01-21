@@ -3,6 +3,7 @@ import { autoinject, computedFrom } from "aurelia-framework";
 import { BigNumber } from "ethers";
 import { Address } from "services/EthereumService";
 import "./staking.scss";
+import { Redirect } from 'aurelia-router';
 
 @autoinject
 export class Staking {
@@ -13,6 +14,12 @@ export class Staking {
   constructor(
     private eventAggregator: EventAggregator) {}
 
+  public canActivate(_model: unknown, routeConfig: { settings: { state: IStakingModel } }): Redirect | undefined {
+    if (!routeConfig.settings.state) {
+      return new Redirect("");
+    }
+  }
+    
   public activate(_model: unknown, routeConfig: { settings: { state: IStakingModel }}): void {
     this.model = routeConfig.settings.state;
   }

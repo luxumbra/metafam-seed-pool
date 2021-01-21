@@ -17,7 +17,7 @@ export function configure(aurelia: Aurelia): void {
       configuration.settings.keyboard = false;
     })
     .globalResources([
-      PLATFORM.moduleName("dashboard/dashboard"),
+      // PLATFORM.moduleName("dashboard/dashboard"),
     ]);
 
   aurelia.use.developmentLogging(environment.debug ? "debug" : "info");
@@ -31,8 +31,9 @@ export function configure(aurelia: Aurelia): void {
     try {
       const ethereumService = aurelia.container.get(EthereumService);
       ethereumService.initialize(process.env.NODE_ENV === "development" ? Networks.Kovan : Networks.Mainnet);
-      const contractsService = aurelia.container.get(ContractsService);
-      contractsService.initializeContracts();
+
+      aurelia.container.get(ContractsService);
+
     } catch (ex) {
       const eventAggregator = aurelia.container.get(EventAggregator);
       eventAggregator.publish("handleException", new EventConfigException("Sorry, couldn't connect to ethereum", ex));
