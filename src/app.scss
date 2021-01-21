@@ -27,7 +27,7 @@
     display: flex;
     align-items: center;
     border-bottom: 2px solid $color-white;
-    background-color: #eeeeee;
+    background-color: $color-black;
     z-index: 10000; // so everything will scroll under it
     height: 76px;
 

@@ -1,5 +1,12 @@
 .pools {
   .body {
+    .pools {
+      .pool {
+        .icon {
+          width: 140px;
+        }
+      }
+    }
     .share {
       text-align: center;
       margin: auto;
