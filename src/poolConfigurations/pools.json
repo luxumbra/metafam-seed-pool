@@ -1,0 +1,10 @@
+[
+  {
+    "name": "PRIME Pool",
+    "description": "The DGov Pool — short for “decentralized governance — consists of forward-thinking organizations that aim to decentralize their organization using blockchain.",
+    "addresses": {
+      "kovan": "0xeFbc366b57aa1c91dDE87b09367310F973D7aB8c",
+      "mainnet": "0x51A2310B37ead1D8F8Fe01B89b4Cd68FA58992d0"
+    }
+  }
+]
