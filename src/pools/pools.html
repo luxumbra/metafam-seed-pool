@@ -1,14 +1,17 @@
 <template>
   <div class="pools">
     <div class="title">Explore All Pools</div>
-    <div class="heading1">Pool assets are selected and weighed with varying methodologies. Click on a given pool for detailed information.</div>
+    <div class="subtitle heading1">Pool assets are selected and weighed with varying methodologies. Click on a given pool for detailed information.</div>
     <div class="body">
-      <div class="pools">
+      <div class="poolButtons">
         <div class="pool" repeat.for="pool of pools">
-          <div class="name">${pool.name}</div>
-          <div class="icon">
-            <inline-svg svg.to-view="pool.icon"></inline-svg>
+          <div class="poolButton button1" css="background-color: ${poolButtonColor($index)}; border-color: ${poolButtonColor($index)}">
+            <div class="name">${pool.name}</div>
+            <div class="icon">
+              <inline-svg svg.to-view="pool.icon"></inline-svg>
+            </div>
           </div>
+          <div class="description">${pool.description}</div>
         </div>
       </div>
       <div class="share">Want to request, bootstrap, or fund a new PrimeDAO-governed pool?<div>Share your ideas with the ecosystem!</div>

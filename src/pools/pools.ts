@@ -1,34 +1,37 @@
 import { autoinject, singleton } from "aurelia-framework";
 import "./pools.scss";
-import axios from "axios";
-import { EventConfigException } from "services/GeneralEvents";
-import { EventAggregator } from "aurelia-event-aggregator";
-
-interface IPoolConfig {
-  name: string;
-  description: string;
-  addresses: Array<{ [network: string]: string}>;
-  icon: string;
-}
+import { IPoolConfig, PoolService } from "services/PoolService";
 
 @singleton(false)
 @autoinject
 export class Pools {
-  constructor(private eventAggregator: EventAggregator) {
+
+  poolButtonColors = [
+    "#95D86E",
+    "#5BCAA9",
+    "#64B0C8",
+    "#8668FC",
+    "#298CDD",
+    "#39A1D8",
+    "#AE5CFF",
+    "#BF62A8",
+    "#9A14D5",
+    "#B14FD8",
+  ];
+
+  poolButtonColor(index: number): string {
+    return this.poolButtonColors[index % this.poolButtonColors.length];
+  }
+
+  constructor(private poolService: PoolService) {
     
   }
 
-  activate() {
+  async activate() {
     if (!this.pools?.length) {
-      axios.get("https://raw.githubusercontent.com/PrimeDAO/prime-pool-dapp/master/src/poolConfigurations/pools.json")
-        .then((response) => {
-          this.pools = response.data;
-        })
-        .catch((error) => {
-          this.pools = [];
-          this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", error));
-        });
+      this.pools = await this.poolService.getPoolConfigs();
     }
   }
+
   pools: Array<IPoolConfig>;
 }
