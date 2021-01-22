@@ -7,16 +7,16 @@ import { IPoolConfig, PoolService } from "services/PoolService";
 export class Pools {
 
   poolButtonColors = [
-    "#95D86E",
-    "#5BCAA9",
-    "#64B0C8",
-    "#8668FC",
-    "#298CDD",
-    "#39A1D8",
-    "#AE5CFF",
-    "#BF62A8",
-    "#9A14D5",
-    "#B14FD8",
+    "#298cdd",
+    "#8668fc",
+    "#ae5cff",
+    "#5bcaa9",
+    "#b14fd8",
+    "#64b0c8",
+    "#bf62a8",
+    "#39a1d8",
+    "#9a14d5",
+    "#95d86e",
   ];
 
   poolButtonColor(index: number): string {
