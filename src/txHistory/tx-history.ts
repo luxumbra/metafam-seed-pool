@@ -85,9 +85,9 @@ export class TxHistory {
 
     await this.loadContracts();
 
-    this.poolTokenName = (await this.tokenService.getTokenInfo(this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool))).symbol;
-    this.stakingTokenName = (await this.tokenService.getTokenInfo(await this.stakingRewards.stakingToken())).symbol;
-    this.stakingRewardTokenName = (await this.tokenService.getTokenInfo(await this.stakingRewards.rewardToken())).symbol;
+    this.poolTokenName = (await this.tokenService.getTokenInfoFromAddress(this.contractsService.getContractAddress(ContractNames.ConfigurableRightsPool))).symbol;
+    this.stakingTokenName = (await this.tokenService.getTokenInfoFromAddress(await this.stakingRewards.stakingToken())).symbol;
+    this.stakingRewardTokenName = (await this.tokenService.getTokenInfoFromAddress(await this.stakingRewards.rewardToken())).symbol;
 
     return this.getData();
   }
@@ -138,7 +138,7 @@ export class TxHistory {
         const getAssetTransfers = async (isJoin: boolean, joinExitEvents: Array<IStandardEvent>): Promise<Array<IAssetTokenTxInfo>> => {
           const transfers = new Array<IAssetTokenTxInfo>();
           joinExitEvents.forEach(async (event) => {
-            const tokenName = (await this.tokenService.getTokenInfo(event.args[isJoin ? "tokenIn" : "tokenOut"])).symbol;
+            const tokenName = (await this.tokenService.getTokenInfoFromAddress(event.args[isJoin ? "tokenIn" : "tokenOut"])).symbol;
             transfers.push({ name: tokenName, amount: event.args[isJoin ? "tokenAmountIn" : "tokenAmountOut"] }); 
           });
           return transfers;

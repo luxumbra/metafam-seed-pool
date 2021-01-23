@@ -7,7 +7,7 @@ import TransactionsService from "services/TransactionsService";
 import { Address, EthereumService, fromWei } from "services/EthereumService";
 import { BigNumber } from "ethers";
 import { EventConfigException, EventConfigFailure } from "services/GeneralEvents";
-import { PriceService } from "services/PriceService";
+import { TokenService } from "services/TokenService";
 import { Router } from "aurelia-router";
 import { toBigNumberJs } from "services/BigNumberService";
 import { NumberService } from "services/numberService";
@@ -73,7 +73,7 @@ export class Pool {
     private contractsService: ContractsService,
     private ethereumService: EthereumService,
     private transactionsService: TransactionsService,
-    private priceService: PriceService,
+    private tokenService: TokenService,
     private numberService: NumberService,
     private router: Router) {
   }
@@ -218,20 +218,21 @@ export class Pool {
 
   private async getLiquidityAmounts(): Promise<void> {
     try {
-      const prices = await this.priceService.getTokenPrices();
+      // STUB out liquidity stuff
+      // const prices = await this.tokenService.getTokenPrices([]);
 
-      // for APY
-      this.primePrice = prices.primedao;
+      // // for APY
+      // this.primePrice = prices.primedao;
 
-      const priceWethLiquidity =
-        this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))) *
-        prices.weth;
+      // const priceWethLiquidity =
+      //   this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.WETH)))) *
+      //   prices.weth;
 
-      const pricePrimeTokenLiquidity =
-          this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))) *
-        prices.primedao;
+      // const pricePrimeTokenLiquidity =
+      //     this.numberService.fromString(fromWei(await this.bPool.getBalance(this.contractsService.getContractAddress(ContractNames.PRIMETOKEN)))) *
+      //   prices.primedao;
 
-      this.liquidityBalance = priceWethLiquidity + pricePrimeTokenLiquidity;
+      // this.liquidityBalance = priceWethLiquidity + pricePrimeTokenLiquidity;
 
       const poolBalances = new Map();
       poolBalances.set(this.primeTokenAddress, await this.primeToken.balanceOf(this.contractsService.getContractAddress(ContractNames.BPOOL)));

@@ -2,6 +2,8 @@ import { autoinject } from "aurelia-framework";
 import axios from "axios";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException } from "services/GeneralEvents";
+import { IErc20Token } from "services/TokenService";
+import { BigNumber } from "ethers";
 
 export interface IPoolConfig {
   name: string;
@@ -34,4 +36,6 @@ export class PoolService {
 
     return this.poolConfigs;
   }
+
+
 }
