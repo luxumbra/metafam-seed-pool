@@ -108,6 +108,8 @@ export class TokenService {
   geckoCoinInfo: Map<string,string>;
 
   getTokenGeckoMapKey(name: string, symbol: string): string {
+    // PRIMEDao Token HACK!!!
+    if (name.toLowerCase() === "primedao token") { name = "primedao"; };
     return `${name.toLowerCase()}_${symbol.toLowerCase()}`;
   }
 
@@ -136,9 +138,8 @@ export class TokenService {
         this.consoleLogService.handleFailure(
           new EventConfigFailure(`TokenService: Error fetching token info: token not found, or more than one match found (${name}/${symbol})`));
       }
-    } else {
-      return "";
     }
+    return "";
 }
 
   public getTokenContract(tokenAddress: Address): Contract & IErc20Token {

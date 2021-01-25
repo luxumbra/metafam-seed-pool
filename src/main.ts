@@ -1,7 +1,7 @@
 import { Aurelia } from "aurelia-framework";
 import * as environment from "../config/environment.json";
 import { PLATFORM } from "aurelia-pal";
-import { EthereumService, Networks } from "services/EthereumService";
+import { AllowedNetworks, EthereumService, Networks } from "services/EthereumService";
 import { EventConfigException } from "services/GeneralEvents";
 import { ConsoleLogService } from "services/ConsoleLogService";
 import { ContractsService } from "services/ContractsService";
@@ -30,7 +30,9 @@ export function configure(aurelia: Aurelia): void {
     aurelia.container.get(ConsoleLogService);
     try {
       const ethereumService = aurelia.container.get(EthereumService);
-      ethereumService.initialize(process.env.NODE_ENV === "development" ? Networks.Kovan : Networks.Mainnet);
+      ethereumService.initialize(
+        process.env.NODE_ENV === "development" ? 
+          (process.env.NETWORK as AllowedNetworks ?? Networks.Kovan) : Networks.Mainnet);
 
       aurelia.container.get(ContractsService);
 

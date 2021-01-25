@@ -1,6 +1,7 @@
 import { autoinject, singleton } from "aurelia-framework";
 import "./pools.scss";
 import { IPoolConfig, PoolService } from "services/PoolService";
+import { Pool } from "entities/pool";
 
 @singleton(false)
 @autoinject
@@ -29,9 +30,9 @@ export class Pools {
 
   async activate() {
     if (!this.pools?.length) {
-      this.pools = await this.poolService.getPoolConfigs();
+      this.pools = Array.from((await this.poolService.getPoolConfigs()).values());
     }
   }
 
-  pools: Array<IPoolConfig>;
+  pools: Array<Pool>;
 }

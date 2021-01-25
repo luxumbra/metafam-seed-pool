@@ -4,7 +4,7 @@ import { IPoolConfig } from "services/PoolService";
 import { IErc20Token, ITokenInfo, TokenService } from "services/TokenService";
 import { autoinject } from "aurelia-framework";
 import { ContractNames, ContractsService } from "services/ContractsService";
-import { EthereumService, fromWei } from "services/EthereumService";
+import { Address, EthereumService, fromWei } from "services/EthereumService";
 import { NumberService } from "services/numberService";
 import { ConsoleLogService } from "services/ConsoleLogService";
 import { EventConfigFailure } from "services/GeneralEvents";
@@ -36,7 +36,7 @@ export class Pool implements IPoolConfig {
   /**
    * crPool address on the different networks
    */
-  addresses: { [network: string]: string; }[];
+  address: Address;
   /**
    * SVG icon for the pool
    */
@@ -52,16 +52,16 @@ export class Pool implements IPoolConfig {
     ) {
   }
 
-  public async initialize(config: IPoolConfig):Promise<void> {
+  public async initialize(config: IPoolConfig): Promise<Pool> {
     Object.assign(this, config);
 
-    const crPoolAddress = this.addresses[this.ethereumService.targetedNetwork];
+    const crPoolAddress = this.address;
 
     this.crPool = await this.contractsService.getContractAtAddress(
       ContractNames.ConfigurableRightsPool,
       crPoolAddress);
 
-      this.bPool = await this.contractsService.getContractAtAddress(
+    this.bPool = await this.contractsService.getContractAtAddress(
       ContractNames.BPOOL,
       await this.crPool.bPool());
 
@@ -69,23 +69,27 @@ export class Pool implements IPoolConfig {
     poolTokenInfo.tokenContract = this.crPool;
     this.poolToken = poolTokenInfo;
     
-    const tokenAddresses = await this.bPool.getFinalTokens();
-    const tokens = new Array<IPoolTokenInfo>();
+    const assetTokenAddresses = await this.bPool.getCurrentTokens(); // getFinalTokens();
+    const assetTokens = new Array<IPoolTokenInfo>();
     
-    for (const tokenAddress of tokenAddresses) {
+    for (const tokenAddress of assetTokenAddresses) {
       const tokenInfo = (await this.tokenService.getTokenInfoFromAddress(tokenAddress)) as IPoolTokenInfo;
       tokenInfo.tokenContract =
         await this.contractsService.getContractAtAddress(
         ContractNames.IERC20,
         tokenAddress);
-      tokens.push(tokenInfo);
+      assetTokens.push(tokenInfo);
     }
 
-    await this.hydrateTokenPrices(tokens);
+    await this.hydrateTokenPrices(assetTokens);
 
-    this.hydratePoolTokenBalances(tokens);
+    await this.hydratePoolTokenBalances(assetTokens);
+
+    this.hydrateTotalLiquidity(assetTokens);
     
-    this.assetTokens = tokens;
+    this.assetTokens = assetTokens;
+
+    return this;
   }
 
   hydrateTokenPrices(tokens: Array<IPoolTokenInfo>): Promise<void> {
@@ -95,7 +99,7 @@ export class Pool implements IPoolConfig {
     return axios.get(uri)
       .then((response) => {
         for (const token of tokens) {
-          token.price = response.data[token.id].usd;
+          token.price = response.data[token.id]?.usd ?? 0;
         }
       })
       .catch((error) => {
@@ -112,11 +116,8 @@ export class Pool implements IPoolConfig {
 
   totalLiquidity: number;
 
-  public getTotalLiquidity(): number {
-    if (!this.totalLiquidity) {
-      this.totalLiquidity = this.assetTokens.reduce((accumulator, currentValue) => 
-        accumulator + this.numberService.fromString(fromWei(currentValue.balanceInPool)) * currentValue.price, 0)
-    }
-    return this.totalLiquidity;
+  public hydrateTotalLiquidity(tokens: Array<IPoolTokenInfo>): void {
+    this.totalLiquidity = tokens.reduce((accumulator, currentValue) => 
+      accumulator + this.numberService.fromString(fromWei(currentValue.balanceInPool)) * currentValue.price, 0)
   }
 }

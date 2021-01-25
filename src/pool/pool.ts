@@ -1,4 +1,4 @@
-import { autoinject, singleton, computedFrom } from "aurelia-framework";
+import { autoinject, singleton, computedFrom, bindable } from "aurelia-framework";
 import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./pool.scss";
@@ -15,56 +15,58 @@ import { NumberService } from "services/numberService";
 @singleton(false)
 @autoinject
 export class Pool {
-  private initialized = false;
-  private weth: any;
-  private crPool: any;
-  private bPool: any;
-  private stakingRewards: any;
-  private primeToken: any;
-  private bPrimeToken: any;
-  private connected = false;
-  private liquidityBalance: number;
-  private swapfee: BigNumber;
+  @bindable poolAddress: Address;
+  pool: Pool;
+  initialized = false;
+  weth: any;
+  crPool: any;
+  bPool: any;
+  stakingRewards: any;
+  primeToken: any;
+  bPrimeToken: any;
+  connected = false;
+  liquidityBalance: number;
+  swapfee: BigNumber;
   /**
    * % number:  the amount of bprime that the user has in proportion to the total supply.
    */
-  private poolUsersBPrimeShare: number;
-  private currentAPY: number;
-  private primeFarmed: BigNumber;
-  private bPrimeStaked: BigNumber;
-  private poolTotalDenormWeights: Map<Address, BigNumber>;
-  private poolTokenNormWeights: Map<Address, BigNumber>;
+  poolUsersBPrimeShare: number;
+  currentAPY: number;
+  primeFarmed: BigNumber;
+  bPrimeStaked: BigNumber;
+  poolTotalDenormWeights: Map<Address, BigNumber>;
+  poolTokenNormWeights: Map<Address, BigNumber>;
 
   // token balances in bPool
-  private poolBalances: Map<Address, BigNumber>;
-  private poolUsersTokenShare: Map<Address, BigNumber>
+  poolBalances: Map<Address, BigNumber>;
+  poolUsersTokenShare: Map<Address, BigNumber>
   // user balance in the given token
-  private userTokenBalances: Map<Address, BigNumber>;
-  private primeTokenAddress: Address;
-  private wethTokenAddress: Address;
-  private bPrimeTokenAddress: Address;
-  private poolTokenAddresses: Array<Address>;
-  private poolTotalBPrimeSupply: BigNumber;
-  private poolTotalDenormWeight: BigNumber;
-  private poolTokenAllowances: Map<Address, BigNumber>;
-  private ethWethAmount: BigNumber;
-  private wethEthAmount: BigNumber;
-  private primePrice: number;
+  userTokenBalances: Map<Address, BigNumber>;
+  primeTokenAddress: Address;
+  wethTokenAddress: Address;
+  bPrimeTokenAddress: Address;
+  poolTokenAddresses: Array<Address>;
+  poolTotalBPrimeSupply: BigNumber;
+  poolTotalDenormWeight: BigNumber;
+  poolTokenAllowances: Map<Address, BigNumber>;
+  ethWethAmount: BigNumber;
+  wethEthAmount: BigNumber;
+  primePrice: number;
 
   @computedFrom("userTokenBalances")
-  private get userPrimeBalance(): BigNumber {
+  get userPrimeBalance(): BigNumber {
     return this.userTokenBalances?.get(this.primeTokenAddress);
   }
   @computedFrom("userTokenBalances")
-  private get userWethBalance(): BigNumber {
+  get userWethBalance(): BigNumber {
     return this.userTokenBalances?.get(this.wethTokenAddress);
   }
   @computedFrom("userTokenBalances")
-  private get userEthBalance(): BigNumber {
+  get userEthBalance(): BigNumber {
     return this.userTokenBalances?.get("ETH");
   }
   @computedFrom("userTokenBalances")
-  private get userBPrimeBalance(): BigNumber {
+  get userBPrimeBalance(): BigNumber {
     return this.userTokenBalances?.get(this.bPrimeTokenAddress);
   }
 
@@ -78,7 +80,7 @@ export class Pool {
     private router: Router) {
   }
 
-  private async attached(): Promise<void> {
+  async attached(): Promise<void> {
     this.eventAggregator.subscribe("Network.Changed.Account", async () => {
       await this.loadContracts();
       this.getUserBalances();
@@ -96,7 +98,7 @@ export class Pool {
   /**
    * have to call this with and without an account
    */
-  private async loadContracts() {
+  async loadContracts() {
     this.crPool = await this.contractsService.getContractFor(ContractNames.ConfigurableRightsPool);
     this.bPool = await this.contractsService.getContractFor(ContractNames.BPOOL);
     this.stakingRewards = await this.contractsService.getContractFor(ContractNames.STAKINGREWARDS);
@@ -104,7 +106,7 @@ export class Pool {
     this.primeToken = await this.contractsService.getContractFor(ContractNames.PRIMETOKEN);
     this.bPrimeToken = this.crPool;
   }
-  private async initialize(): Promise<void> {
+  async initialize(): Promise<void> {
     if (!this.initialized) {
       try {
       // timeout to allow styles to load on startup to modalscreen sizes correctly
@@ -149,7 +151,7 @@ export class Pool {
     }
   }
 
-  private async getUserBalances(initializing = false): Promise<void> {
+  async getUserBalances(initializing = false): Promise<void> {
 
     if (this.initialized && this.ethereumService.defaultAccountAddress) {
       try {
@@ -210,13 +212,13 @@ export class Pool {
     }
   }
 
-  private async getStakingAmounts(): Promise<void> {
+  async getStakingAmounts(): Promise<void> {
     this.currentAPY =
     ((this.numberService.fromString(fromWei((await this.stakingRewards.initreward()))) / 30)
     * this.primePrice * 365) / this.liquidityBalance;
   }
 
-  private async getLiquidityAmounts(): Promise<void> {
+  async getLiquidityAmounts(): Promise<void> {
     try {
       // STUB out liquidity stuff
       // const prices = await this.tokenService.getTokenPrices([]);
@@ -252,7 +254,7 @@ export class Pool {
     }
   }
 
-  private async getTokenAllowances(): Promise<void> {
+  async getTokenAllowances(): Promise<void> {
     const allowances = new Map();
     await allowances.set(this.primeTokenAddress, await this.primeToken.allowance(
       this.ethereumService.defaultAccountAddress,
@@ -265,7 +267,7 @@ export class Pool {
       this.contractsService.getContractAddress(ContractNames.STAKINGREWARDS)));
     this.poolTokenAllowances = allowances;
   }
-  private ensureConnected(): boolean {
+  ensureConnected(): boolean {
     if (!this.connected) {
       // TODO: make this await until we're either connected or not?
       this.ethereumService.connect();
@@ -276,7 +278,7 @@ export class Pool {
     }
   }
 
-  private async handleDeposit() {
+  async handleDeposit() {
     if (this.ensureConnected()) {
       if (this.ethWethAmount.gt(this.userEthBalance)) {
         this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You don't have enough ETH to wrap the amount you requested"));
@@ -288,7 +290,7 @@ export class Pool {
     }
   }
 
-  private async handleWithdraw() {
+  async handleWithdraw() {
     if (this.ensureConnected()) {
       if (this.wethEthAmount.gt(this.userWethBalance)) {
         this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You don't have enough WETH to unwrap the amount you requested"));
@@ -299,16 +301,16 @@ export class Pool {
     }
   }
 
-  private stakeAmount: BigNumber;
+  stakeAmount: BigNumber;
 
-  private async handleHarvestWithdraw() {
+  async handleHarvestWithdraw() {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.stakingRewards.exit());
       this.getUserBalances();
     }
   }
 
-  private gotoLiquidity(remove = false) {
+  gotoLiquidity(remove = false) {
     if (this.ensureConnected()) {
       Object.assign(this,
         {
@@ -321,7 +323,7 @@ export class Pool {
     }
   }
 
-  private gotoStaking(harvest = false) {
+  gotoStaking(harvest = false) {
     if (this.ensureConnected()) {
       Object.assign(this,
         {
@@ -334,7 +336,7 @@ export class Pool {
     }
   }
 
-  private async liquidityJoinswapExternAmountIn(tokenIn, tokenAmountIn, minPoolAmountOut): Promise<void> {
+  async liquidityJoinswapExternAmountIn(tokenIn, tokenAmountIn, minPoolAmountOut): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.joinswapExternAmountIn(
         tokenIn,
@@ -345,7 +347,7 @@ export class Pool {
     }
   }
 
-  private async liquidityJoinPool(poolAmountOut, maxAmountsIn): Promise<void> {
+  async liquidityJoinPool(poolAmountOut, maxAmountsIn): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.joinPool(poolAmountOut, maxAmountsIn));
       await this.getLiquidityAmounts();
@@ -353,7 +355,7 @@ export class Pool {
     }
   }
 
-  private async liquidityExit(poolAmountIn, minAmountsOut): Promise<void> {
+  async liquidityExit(poolAmountIn, minAmountsOut): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.exitPool(poolAmountIn, minAmountsOut));
       await this.getLiquidityAmounts();
@@ -361,7 +363,7 @@ export class Pool {
     }
   }
 
-  private async liquidityExitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut): Promise<void> {
+  async liquidityExitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.crPool.exitswapPoolAmountIn(tokenOutAddress, poolAmountIn, minTokenAmountOut));
       await this.getLiquidityAmounts();
@@ -369,7 +371,7 @@ export class Pool {
     }
   }
 
-  private async liquiditySetTokenAllowance(tokenAddress: Address, amount: BigNumber): Promise<void> {
+  async liquiditySetTokenAllowance(tokenAddress: Address, amount: BigNumber): Promise<void> {
     if (this.ensureConnected()) {
       const tokenContract = tokenAddress === this.primeTokenAddress ? this.primeToken : this.weth;
       await this.transactionsService.send(() => tokenContract.approve(
@@ -380,7 +382,7 @@ export class Pool {
     }
   }
 
-  private async stakingSetTokenAllowance(amount: BigNumber): Promise<void> {
+  async stakingSetTokenAllowance(amount: BigNumber): Promise<void> {
     if (this.ensureConnected()) {
       const tokenContract = this.bPrimeToken;
       await this.transactionsService.send(() => tokenContract.approve(
@@ -391,7 +393,7 @@ export class Pool {
     }
   }
 
-  private async stakingStake(amount: BigNumber): Promise<void> {
+  async stakingStake(amount: BigNumber): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.stakingRewards.stake(amount));
       // TODO:  should happen after mining
@@ -399,7 +401,7 @@ export class Pool {
     }
   }
 
-  private async stakingHarvest(): Promise<void> {
+  async stakingHarvest(): Promise<void> {
     if (this.ensureConnected()) {
       await this.transactionsService.send(() => this.stakingRewards.getReward());
       // TODO:  should happen after mining
@@ -408,7 +410,7 @@ export class Pool {
   }
 
 
-  private async stakingExit(): Promise<void> {
+  async stakingExit(): Promise<void> {
     if (this.ensureConnected()) {
       if (this.bPrimeStaked.isZero()) {
         this.eventAggregator.publish("handleValidationError", new EventConfigFailure("You have not staked any BPRIME, so there is nothing to exit"));
@@ -419,7 +421,7 @@ export class Pool {
     }
   }
 
-  private handleGetMax() {
+  handleGetMax() {
     this.wethEthAmount = this.userWethBalance;
   }
 }
