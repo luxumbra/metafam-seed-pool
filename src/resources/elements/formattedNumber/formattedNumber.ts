@@ -3,12 +3,14 @@ import {
   bindable,
   bindingMode,
   computedFrom,
+  containerless
 } from "aurelia-framework";
 import { NumberService } from "services/numberService";
 import { Utils } from "services/utils";
 import tippy from "tippy.js";
 
 @autoinject
+@containerless()
 export class FormattedNumber {
 
   /**
