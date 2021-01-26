@@ -1,7 +1,7 @@
 [
   {
     "name": "PRIME Pool",
-    "description": "The DGov Pool — short for “decentralized governance — consists of forward-thinking organizations that aim to decentralize their organization using blockchain.",
+    "description": "The PRIME Pool mostly consists of PRIME, the native token of the Prime ecosystem. Liquidity mining programs are popular for this pool.",
     "icon": "<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 113.95 113.95'><defs><style>.cls-1{fill:url(#linear-gradient);}.cls-2{fill:#fff;}.cls-3{fill:none;stroke:#1ee0fc;stroke-miterlimit:10;stroke-width:4.97px;}</style><linearGradient id='linear-gradient' y1='56.97' x2='113.95' y2='56.97' gradientUnits='userSpaceOnUse'><stop offset='0' stop-color='#8668fc'/><stop offset='1' stop-color='#b14fd8'/></linearGradient></defs><g id='Layer_2' data-name='Layer 2'><g id='Layer_1-2' data-name='Layer 1'><circle class='cls-1' cx='56.97' cy='56.97' r='56.97'/><polygon class='cls-2' points='77.37 56.8 83.41 50.76 83.41 22.45 67.17 22.45 50.93 38.69 67.17 38.69 67.17 56.8 49.8 56.8 49.8 38.69 33.56 38.69 33.56 89.72 49.8 89.72 49.8 73.04 61.13 73.04 77.37 56.8'/><path class='cls-3' d='M9.79,57A47.18,47.18,0,0,1,57,9.79'/><path class='cls-3' d='M104.16,57A47.19,47.19,0,0,1,57,104.16'/></g></g></svg>",
     "addresses": {
       "kovan": "0xeFbc366b57aa1c91dDE87b09367310F973D7aB8c",
