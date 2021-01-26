@@ -2,6 +2,8 @@ import { autoinject, singleton } from "aurelia-framework";
 import "./pools.scss";
 import { IPoolConfig, PoolService } from "services/PoolService";
 import { Pool } from "entities/pool";
+import { EventAggregator } from "aurelia-event-aggregator";
+import { EventConfigException } from "services/GeneralEvents";
 
 @singleton(false)
 @autoinject
@@ -24,13 +26,23 @@ export class Pools {
     return this.poolButtonColors[index % this.poolButtonColors.length];
   }
 
-  constructor(private poolService: PoolService) {
+  constructor(
+    private poolService: PoolService,
+    private eventAggregator: EventAggregator) {
     
   }
 
-  async activate() {
+  async attached() {
     if (!this.pools?.length) {
+      try {
+      setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
       this.pools = Array.from((await this.poolService.getPoolConfigs()).values());
+      } catch (ex) {
+        this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
+      }
+      finally {
+        this.eventAggregator.publish("dashboard.loading", false);
+      }
     }
   }
 

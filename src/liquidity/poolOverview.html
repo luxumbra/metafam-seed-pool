@@ -1,4 +1,4 @@
-<template bindable="bPoolAddress,connected,poolUsersBPrimeShare,swapfee,poolTotalDenormWeights">
+<template bindable="bPoolAddress,connected,poolUsersBPrimeShare,swapfee,poolTotalNormWeights">
   <div class="heading heading3">Pool Overview</div>
   <div class="body">
     <div class="dataGroup">
@@ -23,7 +23,7 @@
         mantissa="2"
         placement.to-view="top"></formatted-number>%
     </div>
-    <div class="assets" with.bind="poolTotalDenormWeights">
+    <div class="assets" with.bind="poolTotalNormWeights">
       <div><img src=" /PD_APP_ICON_PD_01.svg" />
         <formatted-number
           value.to-view="primeWeight | ethwei"

@@ -36,6 +36,7 @@
 
     .poolRows {
       .poolRow {
+        padding: 30px 20px;
         border-top: 1px solid #eeeeee;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -49,11 +50,10 @@
         .poolDataHeader {
           padding-bottom: 6px;
           border-bottom: 2px solid #1ee0fc;
-          margin-bottom: 16px;
+          margin-bottom: 8px;
         }
         > .name {
           grid-area: name;
-          padding-top: 30px;
           padding-bottom: 16px;
         }
         .donutchart {
@@ -85,7 +85,34 @@
         }
         .assets {
           grid-area: assets;
+
+          > .tokens {
+            display: flex;
+            > .token {
+              display: flex;
+              align-items: center;
+              margin-right: 8px;
+              font-size: 11px;
+
+              .icon {
+                margin-right: 8px;
+
+                img {
+                  width: 20px;
+                }
+              }
+
+              .symbol {
+                margin-right: 4px;
+              }
+            }
+          }
         }
+      }
+
+      .poolRow:last-child {
+        border-bottom: 1px solid #eeeeee;
+        margin-bottom: 40px;
       }
     }
     .share {

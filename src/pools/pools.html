@@ -49,6 +49,18 @@
           </div>
           <div class="assets">
             <div class="poolDataHeader">Assets</div>
+            <div class="tokens">
+              <div class="token" repeat.for="token of pool.assetTokens">
+                <div class="icon"><img src.one-time="token.icon" /></div>
+                <div class="symbol">${token.symbol}</div>
+                <div class="weight">
+                  <formatted-number
+                    value.to-view="token.normWeightPercentage"
+                    average="false"
+                    mantissa="2"></formatted-number>%
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
