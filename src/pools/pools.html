@@ -23,19 +23,34 @@
           <div class="marketCap">
             <div class="poolDataHeader">Market Cap</div>
             <div class="poolDataValue">
-              <formatted-number
+              $<formatted-number
                 value.to-view="pool.totalLiquidity | ethwei">
               </formatted-number>
             </div>
           </div>
           <div class="priceDelta1">
             <div class="poolDataHeader">1 Day</div>
+            <div class="poolDataValue">
+              <formatted-number
+                value.to-view="pool.totalLiquidityChangePercentage_24h | ethwei">
+              </formatted-number>%
+            </div>
           </div>
           <div class="priceDelta2">
             <div class="poolDataHeader">1 Week</div>
+            <div class="poolDataValue">
+              <formatted-number
+                value.to-view="pool.totalLiquidityChangePercentage_7d | ethwei">
+              </formatted-number>%
+            </div>
           </div>
           <div class="priceDelta3">
             <div class="poolDataHeader">1 Month</div>
+            <div class="poolDataValue">
+              <formatted-number
+                value.to-view="pool.totalLiquidityChangePercentage_30d | ethwei">
+              </formatted-number>%
+            </div>
           </div>
           <div class="chart">
             <div class="poolDataHeader">Chart - 1M</div>

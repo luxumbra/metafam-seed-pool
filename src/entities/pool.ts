@@ -27,31 +27,43 @@ export interface IPoolTokenInfo extends ITokenInfo {
   denormWeightPercentage: number;
   normWeight: BigNumber;
   normWeightPercentage: number;
+  priceChangePercentage_24h: number;
+  priceChangePercentage_7d: number;
+  priceChangePercentage_30d: number;
 }
 
 @autoinject
 export class Pool implements IPoolConfig {
   /**
-   * IPoolConfig....
+   * IPoolConfig properties....
    */
   name: string;
   description: string;
   /**
-   * crPool address on the different networks
+   * crPool address
    */
   address: Address;
   /**
    * SVG icon for the pool
    */
   icon: string;
-
+  /**
+   * additional propoerties...
+   */
   crPool: any;
   bPool: any;
   assetTokens: IPoolTokenInfo[];
   poolToken: IPoolTokenInfo;
   poolTokenTotalSupply: BigNumber;
-  poolTotalDenormWeight: BigNumber;
+  totalDenormWeight: BigNumber;
   swapfee: BigNumber;
+  /**
+   * market cap
+   */
+  totalLiquidity: number;
+  totalLiquidityChangePercentage_24h: number;
+  totalLiquidityChangePercentage_7d: number;
+  totalLiquidityChangePercentage_30d: number;
 
   public constructor(
     private contractsService: ContractsService,
@@ -102,7 +114,7 @@ export class Pool implements IPoolConfig {
     this.assetTokens = assetTokens;
 
     this.poolTokenTotalSupply = await this.poolToken.tokenContract.totalSupply();
-    this.poolTotalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
+    this.totalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
     this.swapfee = await this.bPool.getSwapFee();
 
     return this;
@@ -119,6 +131,9 @@ export class Pool implements IPoolConfig {
         .then((response) => {
           token.price = response.data.market_data.current_price.usd;
           token.icon = response.data.image.thumb;
+          token.priceChangePercentage_24h = response.data.market_data.price_change_percentage_24h ?? 0;
+          token.priceChangePercentage_7d = response.data.market_data.price_change_percentage_7d ?? 0;
+          token.priceChangePercentage_30d = response.data.market_data.price_change_percentage_30d ?? 0;
         })
         .catch((error) => {
           this.consoleLogService.handleFailure(
@@ -133,11 +148,19 @@ export class Pool implements IPoolConfig {
     }
   }
 
-  totalLiquidity: number;
-
   hydrateTotalLiquidity(tokens: Array<IPoolTokenInfo>): void {
+
     this.totalLiquidity = tokens.reduce((accumulator, currentValue) => 
-      accumulator + this.numberService.fromString(fromWei(currentValue.balanceInPool)) * currentValue.price, 0)
+      accumulator + this.numberService.fromString(fromWei(currentValue.balanceInPool)) * currentValue.price, 0);
+
+    this.totalLiquidityChangePercentage_24h = tokens.reduce((accumulator, currentValue) =>
+      accumulator + this.numberService.fromString(fromWei(currentValue.normWeight)) * currentValue.priceChangePercentage_24h, 0);
+
+    this.totalLiquidityChangePercentage_7d = tokens.reduce((accumulator, currentValue) =>
+      accumulator + this.numberService.fromString(fromWei(currentValue.normWeight)) * currentValue.priceChangePercentage_7d, 0);
+
+    this.totalLiquidityChangePercentage_30d = tokens.reduce((accumulator, currentValue) =>
+      accumulator + this.numberService.fromString(fromWei(currentValue.normWeight)) * currentValue.priceChangePercentage_30d, 0);
   }
 
   async hydrateWeights(tokens: Array<IPoolTokenInfo>): Promise<void> {
