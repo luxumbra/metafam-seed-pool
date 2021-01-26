@@ -1,3 +1,4 @@
+@import "styles/colors.scss";
 .pools {
   .subtitle {
     margin-bottom: 20px;
@@ -48,6 +49,16 @@
           "donutchart marketCap priceDelta1 priceDelta2 priceDelta3 addLiquidity"
           "donutchart price assets assets assets addLiquidity";
 
+        .priceDelta1,
+        .priceDelta2,
+        .priceDelta3 {
+          .poolDataValue {
+            &.negative {
+              color: $color-red;
+            }
+          }
+        }
+
         .poolDataHeader {
           padding-bottom: 6px;
           border-bottom: 2px solid #1ee0fc;
@@ -87,6 +98,9 @@
         }
         .price {
           grid-area: price;
+          .poolDataValue {
+            font-weight: bold;
+          }
         }
         .assets {
           grid-area: assets;
