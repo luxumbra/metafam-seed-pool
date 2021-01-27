@@ -1,5 +1,5 @@
 @import "styles/colors.scss";
-.appWrapper {
+j .appWrapper {
   display: grid;
   grid-template-columns: 190px 1fr;
   grid-template-rows: auto;
@@ -26,7 +26,6 @@
     text-align: right;
     display: flex;
     align-items: center;
-    border-bottom: 2px solid $color-white;
     background-color: $color-black;
     z-index: 10000; // so everything will scroll under it
     height: 76px;
