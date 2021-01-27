@@ -1,6 +1,6 @@
 @import "styles/colors.scss";
 
-.banner {
+.bannerContainer {
   display: flex;
   justify-content: center;
   position: fixed;
@@ -14,7 +14,7 @@
   pointer-events: none;
 }
 
-.banner .body {
+.bannerContainer .body {
   display: flex;
   max-width: 100%;
   padding-top: 0.6rem;
@@ -45,57 +45,57 @@
   }
 }
 
-.banner.warning .body {
+.bannerContainer.warning .body {
   color: $color-orange;
   background-color: $color-black;
 }
 
-.banner.failure .body {
+.bannerContainer.failure .body {
   color: $color-red;
   background-color: $color-black;
 }
 
-.banner.info .body {
+.bannerContainer.info .body {
   color: $color-white;
   background-color: $color-green;
 }
 
-.banner.info .body a {
+.bannerContainer.info .body a {
   margin-left: 0.5rem;
   color: $color-yellow;
   text-transform: uppercase;
 }
 
-.banner.info .body .copy-to-clip-button {
+.bannerContainer.info .body .copy-to-clip-button {
   margin-left: 0.5rem;
   color: $color-yellow;
 }
 
-// .banner.info button.close {
+// .bannerContainer.info button.close {
 //   background-color: $color-green;
 // }
 
-// .banner button.close span {
+// .bannerContainer button.close span {
 //   color: $color-white;
 // }
 
-// .banner.warning button.close {
+// .bannerContainer.warning button.close {
 //   background-color: $color-orange;
 // }
 
-// .banner.warning button.close span {
+// .bannerContainer.warning button.close span {
 //   color: $color-darkblue;
 // }
 
-.banner.au-enter-active {
+.bannerContainer.au-enter-active {
   animation: slideDown 1s;
 }
 
-.banner.au-leave-active {
+.bannerContainer.au-leave-active {
   animation: slideUp 0.6s;
 }
 
-.banner.au-stagger {
+.bannerContainer.au-stagger {
   animation-delay: 50ms;
 }
 

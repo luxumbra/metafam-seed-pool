@@ -41,15 +41,15 @@
 
         div.columnHeader:nth-child(1) {
           background-color: #8668fc;
-          border-bottom-color: #c08eff;
+          border-bottom-color: $color-pink;
         }
         div.columnHeader:nth-child(2) {
-          background-color: #298cdd;
+          background-color: $color-bluegreen;
           border-bottom-color: #64b0c8;
         }
         div.columnHeader:nth-child(3) {
-          background-color: #ae5cff;
-          border-bottom-color: #c08eff;
+          background-color: $color-darkpink;
+          border-bottom-color: $color-pink;
         }
         div.columnHeader:nth-child(4) {
           background-color: #5bcaa9;

@@ -1,0 +1,125 @@
+@import "styles/colors.scss";
+.home {
+  color: $color-white;
+  padding: 40px;
+
+  .divider {
+    width: 48px;
+    border-bottom: 2px solid #1ee0fc;
+    padding-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  > .title {
+    font-family: "Cera Pro";
+    font-size: 22px;
+    color: $color-light-purple;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+  }
+
+  .banner {
+    box-shadow: 3px 3px 8px #00000029;
+    border-radius: 20px;
+    padding: 60px;
+
+    .title {
+      font-size: 32spx;
+      font-family: "Cera Pro";
+    }
+  }
+
+  .benefits {
+    display: flex;
+    justify-content: space-between;
+
+    .title {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid $color-lightblue;
+    }
+
+    .access {
+      background-color: $color-bluegreen;
+    }
+    .safe {
+      background-color: $color-light-purple;
+    }
+    .mgmt {
+      background-color: $color-darkpink;
+    }
+    .access,
+    .safe,
+    .mgmt {
+      width: 26%;
+      box-shadow: 3px 3px 8px #00000029;
+      border-radius: 0px 0px 20px 20px;
+      border-top: 6px solid $color-lightblue;
+      padding: 26px;
+      padding-bottom: 26px;
+
+      .body {
+        font-family: Aeonik;
+        font-size: 11px;
+      }
+
+      img {
+        width: 20px;
+      }
+    }
+  }
+
+  .getStarted {
+    padding: 30px;
+    box-shadow: 3px 3px 8px #00000029;
+    border-radius: 0px 0px 20px 20px;
+    color: $color-white;
+    border-top: 6px solid $color-pink;
+    background-color: $color-light-purple;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    text-align: center;
+
+    .blob {
+      padding-right: 30px;
+      img {
+        width: 240px;
+      }
+    }
+
+    .diveIn {
+      .title {
+        font-weight: bold;
+        font-family: "Cera Pro";
+      }
+
+      .divider {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .already {
+        margin-bottom: 16px;
+      }
+
+      .browse,
+      .needMore {
+        margin-bottom: 24px;
+      }
+    }
+  }
+
+  .invitation {
+    color: $color-black;
+    width: 465px;
+    margin: auto;
+    text-align: center;
+    .towards {
+      margin-bottom: 40px;
+    }
+  }
+}

@@ -1,7 +1,6 @@
+import "./home.scss";
 export class Home {
-  message: string;
 
   constructor() {
-    this.message = 'primepool.eth';
   }
 }

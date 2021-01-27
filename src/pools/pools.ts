@@ -11,9 +11,9 @@ import { Router } from "aurelia-router";
 export class Pools {
 
   poolButtonColors = [
-    "#298cdd",
-    "#8668fc",
-    "#ae5cff",
+    "$color-bluegreen",
+    "$color-light-purple",
+    "$color-darkpink",
     "#5bcaa9",
     "#b14fd8",
     "#64b0c8",

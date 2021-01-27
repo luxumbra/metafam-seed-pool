@@ -1,5 +1,5 @@
 <template>
-  <div class="pools">
+  <div class="page animated-page au-animate pools">
     <div class="title">Explore All Pools</div>
     <div class="subtitle heading1">Pool assets are selected and weighed with varying methodologies. Click on a given pool for detailed information.</div>
     <div class="body">
@@ -70,6 +70,9 @@
           </div>
           <div class="price">
             <div class="poolDataHeader">Price</div>
+            <div class="poolDataValue">
+              $<formatted-number value.to-view="pool.poolTokenPrice"></formatted-number>
+            </div>
           </div>
           <div class="assets">
             <div class="poolDataHeader">Assets</div>
