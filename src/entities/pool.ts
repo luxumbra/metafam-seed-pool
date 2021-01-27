@@ -54,11 +54,15 @@ export class Pool implements IPoolConfig {
   bPool: any;
   assetTokens: IPoolTokenInfo[];
   poolToken: IPoolTokenInfo;
+  /**
+   * totalLiquidity / poolTokenTotalSupply
+   */
+  poolTokenPrice: number;
   poolTokenTotalSupply: BigNumber;
   totalDenormWeight: BigNumber;
   swapfee: BigNumber;
   /**
-   * market cap
+   * market cap or liquidity.  Total asset token amounts * their prices.
    */
   totalLiquidity: number;
   totalLiquidityChangePercentage_24h: number;
@@ -114,6 +118,7 @@ export class Pool implements IPoolConfig {
     this.assetTokens = assetTokens;
 
     this.poolTokenTotalSupply = await this.poolToken.tokenContract.totalSupply();
+    this.poolTokenPrice = this.totalLiquidity / this.numberService.fromString(fromWei(this.poolTokenTotalSupply));
     this.totalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
     this.swapfee = await this.bPool.getSwapFee();
 
