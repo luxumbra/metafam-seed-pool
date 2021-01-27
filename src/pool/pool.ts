@@ -1,4 +1,4 @@
-import { autoinject, singleton, computedFrom, bindable } from "aurelia-framework";
+import { autoinject, singleton, computedFrom } from "aurelia-framework";
 import { ContractNames } from "services/ContractsService";
 import { ContractsService } from "services/ContractsService";
 import "./pool.scss";
@@ -11,11 +11,12 @@ import { TokenService } from "services/TokenService";
 import { Router } from "aurelia-router";
 import { toBigNumberJs } from "services/BigNumberService";
 import { NumberService } from "services/numberService";
+import { PoolService } from "services/PoolService";
+import { Pool } from "entities/pool";
 
 @singleton(false)
 @autoinject
-export class Pool {
-  @bindable poolAddress: Address;
+export class PoolDashboard {
   pool: Pool;
   initialized = false;
   weth: any;
@@ -77,7 +78,12 @@ export class Pool {
     private transactionsService: TransactionsService,
     private tokenService: TokenService,
     private numberService: NumberService,
-    private router: Router) {
+    private router: Router,
+    private poolService: PoolService) {
+  }
+
+  activate(model: { poolAddress: Address }) {
+    this.pool = this.poolService.getPoolFromAddress(model.poolAddress);
   }
 
   async attached(): Promise<void> {

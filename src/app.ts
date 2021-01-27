@@ -103,7 +103,7 @@ export class App {
       {
         moduleId: PLATFORM.moduleName("./pool/pool"),
         name: "pool",
-        route: ["pool:address"],
+        route: ["pool/:poolAddress"],
         title: "Pool",
       }
             , {

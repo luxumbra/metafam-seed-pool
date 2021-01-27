@@ -1,9 +1,10 @@
 import { autoinject, singleton } from "aurelia-framework";
 import "./pools.scss";
-import { IPoolConfig, PoolService } from "services/PoolService";
+import { PoolService } from "services/PoolService";
 import { Pool } from "entities/pool";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException } from "services/GeneralEvents";
+import { Router } from "aurelia-router";
 
 @singleton(false)
 @autoinject
@@ -26,9 +27,13 @@ export class Pools {
     return this.poolButtonColors[index % this.poolButtonColors.length];
   }
 
+  pools: Array<Pool>;
+
   constructor(
     private poolService: PoolService,
-    private eventAggregator: EventAggregator) {
+    private eventAggregator: EventAggregator,
+    private router: Router,
+    ) {
     
   }
 
@@ -46,5 +51,7 @@ export class Pools {
     }
   }
 
-  pools: Array<Pool>;
+  gotoPool(pool: Pool) {
+    this.router.navigate(`pool/${pool.address}`);
+  }
 }

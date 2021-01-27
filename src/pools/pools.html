@@ -5,7 +5,7 @@
     <div class="body">
       <div class="poolButtons">
         <div class="pool" repeat.for="pool of pools">
-          <div class="poolButton button1" css="background-color: ${poolButtonColor($index)}; border-color: ${poolButtonColor($index)}">
+          <div class="poolButton button1" click.delegate="gotoPool(pool)" css="background-color: ${poolButtonColor($index)}; border-color: ${poolButtonColor($index)}">
             <div class="name">${pool.name}</div>
             <div class="icon">
               <inline-svg svg.to-view="pool.icon"></inline-svg>
