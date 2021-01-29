@@ -39,17 +39,45 @@ export class PrimeToken {
         await this.poolService.ensureInitialized();
       }
       this.pool = this.poolService.poolConfigs.get(this.contractService.getContractAddress(ContractNames.ConfigurableRightsPool));
-      const tokenAddress = this.contractService.getContractAddress(ContractNames.PRIMETOKEN);
-      this.tokenInfo = await this.tokenService.getTokenInfoFromAddress(tokenAddress);
-      this.token = this.tokenService.getTokenContract(tokenAddress);
+      const primeTokenAddress = this.contractService.getContractAddress(ContractNames.PRIMETOKEN);
+      this.tokenInfo = await this.tokenService.getTokenInfoFromAddress(primeTokenAddress);
+      this.token = this.tokenService.getTokenContract(primeTokenAddress);
       this.totalSupply = await this.token.totalSupply();
-      this.totalStaked = await this.pool.assetTokens.get(tokenAddress).balanceInPool;
+      this.totalStaked = await this.pool.assetTokens.get(primeTokenAddress).balanceInPool;
       this.percentStaked = this.numberService.fromString(toBigNumberJs(this.totalStaked).div(toBigNumberJs(this.totalSupply)).times(100).toString());
     } catch (ex) {
       this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
     }
     finally {
       this.eventAggregator.publish("dashboard.loading", false);
+    }
+  }
+
+  get showMMButton() {
+    return !!window.ethereum;
+  }
+
+  async addToMetamask() {
+    /**
+     * from: https://github.com/ethereum/EIPs/blob/master/EIPS/eip-747.md
+     */
+    try {
+      // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+      const wasAdded = await window.ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20', // Initially only supports ERC20, but eventually more!
+          options: {
+            address: this.tokenInfo.address, // The address that the token is at.
+            symbol: this.tokenInfo.symbol, // A ticker symbol or shorthand, up to 5 chars.
+            decimals: 18, // The number of decimals in the token
+            image: this.tokenInfo.icon, // A string url of the token logo
+          },
+        },
+      });
+
+    } catch (error) {
+      this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an unexpected error occurred", error));
     }
   }
 }

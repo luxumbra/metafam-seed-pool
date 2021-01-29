@@ -29,7 +29,7 @@ export class PoolService {
   public poolConfigs: Map<Address, Pool>;
   public get poolConfigsArray(): Array<Pool> { return Array.from(this.poolConfigs.values()); };
   public initializing = true;
-  initializedPromise: Promise<void>;
+  private initializedPromise: Promise<void>;
   
   constructor(
     private ethereumService: EthereumService,
@@ -64,7 +64,7 @@ export class PoolService {
     });
   }
 
-  createPoolFromConfig(config: IPoolConfigInternal): Promise<Pool> {
+  private createPoolFromConfig(config: IPoolConfigInternal): Promise<Pool> {
     const poolConfig = {
       address: config.addresses[this.ethereumService.targetedNetwork],
       description: config.description,
