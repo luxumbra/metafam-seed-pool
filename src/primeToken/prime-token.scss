@@ -13,6 +13,7 @@
     .firstRow {
       grid-area: firstRow;
       align-items: center;
+      display: flex;
       margin-bottom: 20px;
       .logo {
         width: 96px;
