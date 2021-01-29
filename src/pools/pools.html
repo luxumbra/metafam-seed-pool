@@ -65,17 +65,17 @@
             <div class="poolDataHeader">Chart - 1M</div>
           </div> -->
           <div class="addLiquidity">
-            <div class="poolDataHeader">Buy</div>
-            <button class="button1">Add Liquidity</button>
+            <div class="poolDataHeader">Add Liquidity</div>
+            <button class="button1">Buy ${pool.poolToken.symbol}</button>
           </div>
           <div class="price">
-            <div class="poolDataHeader">Price</div>
+            <div class="poolDataHeader">${pool.poolToken.symbol} Price</div>
             <div class="poolDataValue">
               $<formatted-number value.to-view="pool.poolTokenPrice"></formatted-number>
             </div>
           </div>
           <div class="assets">
-            <div class="poolDataHeader">Assets</div>
+            <div class="poolDataHeader">Balances</div>
             <div class="tokens">
               <div class="token" repeat.for="token of pool.assetTokens">
                 <div class="icon"><img src.one-time="token.icon" /></div>
