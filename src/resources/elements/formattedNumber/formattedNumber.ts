@@ -17,12 +17,14 @@ export class FormattedNumber {
    * how many significant digits we want to display
    */
   //  @bindable({ defaultBindingMode: bindingMode.toView }) public format?: string;
-  @bindable({ defaultBindingMode: bindingMode.toView }) public precision?: string | number;
-  @bindable({ defaultBindingMode: bindingMode.toView }) public average?: string | boolean;
-  @bindable({ defaultBindingMode: bindingMode.toView }) public mantissa?: string | number;
-  @bindable({ defaultBindingMode: bindingMode.toView }) public value: number | string;
-  @bindable({ defaultBindingMode: bindingMode.toView }) public placement = "top";
-  @bindable({ defaultBindingMode: bindingMode.toView }) public defaultText = "--";
+  @bindable public precision?: string | number;
+  @bindable public average?: string | boolean;
+  @bindable public mantissa?: string | number;
+  @bindable public value: number | string;
+  @bindable public placement = "top";
+  @bindable public defaultText = "--";
+  @bindable public thousandsSeparated?: string | boolean;
+
 
   private text: string;
   private textElement: HTMLElement;
@@ -43,11 +45,13 @@ export class FormattedNumber {
 
     if ((this._value !== null) && (this._value !== undefined)) {
       const average = (this.average === undefined) ? true : Utils.toBoolean(this.average);
+      const thousandSeparated = (this.thousandsSeparated === undefined) ? false : Utils.toBoolean(this.thousandsSeparated);
       text = this.numberService.toString(Number(this._value),
         {
           precision: this.precision ? this.precision : (average ? 3 : undefined),
           average,
           mantissa: this.mantissa !== undefined ? this.mantissa : undefined,
+          thousandSeparated
         },
       );
     }

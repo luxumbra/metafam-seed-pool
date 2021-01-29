@@ -4,9 +4,8 @@ import { IPoolConfig } from "services/PoolService";
 import { IErc20Token, ITokenInfo, TokenService } from "services/TokenService";
 import { autoinject } from "aurelia-framework";
 import { ContractNames, ContractsService } from "services/ContractsService";
-import { Address, EthereumService, fromWei } from "services/EthereumService";
+import { Address, fromWei } from "services/EthereumService";
 import { NumberService } from "services/numberService";
-import { ConsoleLogService } from "services/ConsoleLogService";
 
 export interface IPoolTokenInfo extends ITokenInfo {
   tokenContract: IErc20Token;
@@ -41,7 +40,7 @@ export class Pool implements IPoolConfig {
   assetTokens: IPoolTokenInfo[];
   poolToken: IPoolTokenInfo;
   /**
-   * totalLiquidity / poolTokenTotalSupply
+   * marketCap / poolTokenTotalSupply
    */
   poolTokenPrice: number;
   poolTokenTotalSupply: BigNumber;
@@ -50,17 +49,15 @@ export class Pool implements IPoolConfig {
   /**
    * market cap or liquidity.  Total asset token amounts * their prices.
    */
-  totalLiquidity: number;
-  totalLiquidityChangePercentage_24h: number;
-  totalLiquidityChangePercentage_7d: number;
-  totalLiquidityChangePercentage_30d: number;
+  marketCap: number;
+  totalMarketCapChangePercentage_24h: number;
+  totalMarketCapChangePercentage_7d: number;
+  totalMarketCapChangePercentage_30d: number;
 
   public constructor(
     private contractsService: ContractsService,
-    private ethereumService: EthereumService,
     private numberService: NumberService,
     private tokenService: TokenService,
-    private consoleLogService: ConsoleLogService,
     ) {
   }
 
@@ -102,7 +99,7 @@ export class Pool implements IPoolConfig {
     this.assetTokens = assetTokens;
 
     this.poolTokenTotalSupply = await this.poolToken.tokenContract.totalSupply();
-    this.poolTokenPrice = this.totalLiquidity / this.numberService.fromString(fromWei(this.poolTokenTotalSupply));
+    this.poolTokenPrice = this.marketCap / this.numberService.fromString(fromWei(this.poolTokenTotalSupply));
     this.totalDenormWeight = await this.bPool.getTotalDenormalizedWeight();
     this.swapfee = await this.bPool.getSwapFee();
 
@@ -117,16 +114,16 @@ export class Pool implements IPoolConfig {
 
   hydrateTotalLiquidity(tokens: Array<IPoolTokenInfo>): void {
 
-    this.totalLiquidity = tokens.reduce((accumulator, currentValue) => 
+    this.marketCap = tokens.reduce((accumulator, currentValue) => 
       accumulator + this.numberService.fromString(fromWei(currentValue.balanceInPool)) * currentValue.price, 0);
 
-    this.totalLiquidityChangePercentage_24h = tokens.reduce((accumulator, currentValue) =>
+    this.totalMarketCapChangePercentage_24h = tokens.reduce((accumulator, currentValue) =>
       accumulator + this.numberService.fromString(fromWei(currentValue.normWeight)) * currentValue.priceChangePercentage_24h, 0);
 
-    this.totalLiquidityChangePercentage_7d = tokens.reduce((accumulator, currentValue) =>
+    this.totalMarketCapChangePercentage_7d = tokens.reduce((accumulator, currentValue) =>
       accumulator + this.numberService.fromString(fromWei(currentValue.normWeight)) * currentValue.priceChangePercentage_7d, 0);
 
-    this.totalLiquidityChangePercentage_30d = tokens.reduce((accumulator, currentValue) =>
+    this.totalMarketCapChangePercentage_30d = tokens.reduce((accumulator, currentValue) =>
       accumulator + this.numberService.fromString(fromWei(currentValue.normWeight)) * currentValue.priceChangePercentage_30d, 0);
   }
 
@@ -144,7 +141,7 @@ export class Pool implements IPoolConfig {
   //     // (user's BPRIME share %) * (the pool's balance of the given token)
   //     // note you need to have called getLiquidityAmounts prior
   //     token.userShareInPool = BigNumber.from(toBigNumberJs(token.balanceInPool).times(this.poolUsersBPrimeShare).integerValue().toString());
-  //     // token.balanceInPool.mul(token.price / this.totalLiquidity);
+  //     // token.balanceInPool.mul(token.price / this.marketCap);
   //   }
   // }
 }

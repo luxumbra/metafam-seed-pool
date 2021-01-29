@@ -24,16 +24,16 @@
             <div class="poolDataHeader">Market Cap</div>
             <div class="poolDataValue">
               $<formatted-number
-                value.to-view="pool.totalLiquidity | ethwei">
+                value.to-view="pool.marketCap | ethwei">
               </formatted-number>
             </div>
           </div>
           <div class="priceDelta1">
             <div class="poolDataHeader">1 Day</div>
-            <div class="poolDataValue ${pool.totalLiquidityChangePercentage_24h < 0 ? 'negative' : ''}">
-              <i class="sign fas fa-caret-${pool.totalLiquidityChangePercentage_24h < 0 ? 'down' : 'up'}"></i>
+            <div class="poolDataValue ${pool.totalMarketCapChangePercentage_24h < 0 ? 'negative' : ''}">
+              <i class="sign fas fa-caret-${pool.totalMarketCapChangePercentage_24h < 0 ? 'down' : 'up'}"></i>
               <formatted-number
-                value.to-view="pool.totalLiquidityChangePercentage_24h"
+                value.to-view="pool.totalMarketCapChangePercentage_24h"
                 average="false"
                 mantissa="2">
               </formatted-number>%
@@ -41,10 +41,10 @@
           </div>
           <div class="priceDelta2">
             <div class="poolDataHeader">1 Week</div>
-            <div class="poolDataValue ${pool.totalLiquidityChangePercentage_7d < 0 ? 'negative' : ''}">
-              <i class="sign fas fa-caret-${pool.totalLiquidityChangePercentage_7d < 0 ? 'down' : 'up'}"></i>
+            <div class="poolDataValue ${pool.totalMarketCapChangePercentage_7d < 0 ? 'negative' : ''}">
+              <i class="sign fas fa-caret-${pool.totalMarketCapChangePercentage_7d < 0 ? 'down' : 'up'}"></i>
               <formatted-number
-                value.to-view="pool.totalLiquidityChangePercentage_7d"
+                value.to-view="pool.totalMarketCapChangePercentage_7d"
                 average="false"
                 mantissa="2">
               </formatted-number>%
@@ -52,10 +52,10 @@
           </div>
           <div class="priceDelta3">
             <div class="poolDataHeader">1 Month</div>
-            <div class="poolDataValue ${pool.totalLiquidityChangePercentage_30d < 0 ? 'negative' : ''}">
-              <i class="sign fas fa-caret-${pool.totalLiquidityChangePercentage_30d < 0 ? 'down' : 'up'}"></i>
+            <div class="poolDataValue ${pool.totalMarketCapChangePercentage_30d < 0 ? 'negative' : ''}">
+              <i class="sign fas fa-caret-${pool.totalMarketCapChangePercentage_30d < 0 ? 'down' : 'up'}"></i>
               <formatted-number
-                value.to-view="pool.totalLiquidityChangePercentage_30d"
+                value.to-view="pool.totalMarketCapChangePercentage_30d"
                 average="false"
                 mantissa="2">
               </formatted-number>%
