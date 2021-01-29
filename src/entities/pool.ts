@@ -10,7 +10,7 @@ import { NumberService } from "services/numberService";
 export interface IPoolTokenInfo extends ITokenInfo {
   tokenContract: IErc20Token;
   balanceInPool: BigNumber;
-  userShareInPool: number;
+  // userShareInPool: number;
   denormWeight: BigNumber;
   denormWeightPercentage: number;
   normWeight: BigNumber;
@@ -37,7 +37,8 @@ export class Pool implements IPoolConfig {
    */
   crPool: any;
   bPool: any;
-  assetTokens: IPoolTokenInfo[];
+  assetTokens = new Map<Address,IPoolTokenInfo>();
+  get assetTokensArray(): Array<IPoolTokenInfo> { return Array.from(this.assetTokens.values()); };
   poolToken: IPoolTokenInfo;
   /**
    * marketCap / poolTokenTotalSupply
@@ -79,7 +80,7 @@ export class Pool implements IPoolConfig {
     this.poolToken = poolTokenInfo;
     
     const assetTokenAddresses = await this.bPool.getCurrentTokens();
-    const assetTokens = new Array<IPoolTokenInfo>();
+    const assetTokens = new Map<Address, IPoolTokenInfo>();
     
     for (const tokenAddress of assetTokenAddresses) {
       const tokenInfo = (await this.tokenService.getTokenInfoFromAddress(tokenAddress)) as IPoolTokenInfo;
@@ -87,14 +88,16 @@ export class Pool implements IPoolConfig {
         await this.contractsService.getContractAtAddress(
         ContractNames.IERC20,
         tokenAddress);
-      assetTokens.push(tokenInfo);
+      assetTokens.set(tokenAddress, tokenInfo);
     }
 
-    await this.hydratePoolTokenBalances(assetTokens);
+    const assetTokensArray = Array.from(assetTokens.values());
 
-    await this.hydrateWeights(assetTokens);
+    await this.hydratePoolTokenBalances(assetTokensArray);
 
-    this.hydrateTotalLiquidity(assetTokens);
+    await this.hydrateWeights(assetTokensArray);
+
+    this.hydrateTotalLiquidity(assetTokensArray);
     
     this.assetTokens = assetTokens;
 

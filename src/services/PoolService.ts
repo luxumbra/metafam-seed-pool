@@ -27,6 +27,7 @@ export interface IPoolConfig {
 export class PoolService {
 
   public poolConfigs: Map<Address, Pool>;
+  public get poolConfigsArray(): Array<Pool> { return Array.from(this.poolConfigs.values()); };
   public initializing = true;
   initializedPromise: Promise<void>;
   
@@ -77,9 +78,4 @@ export class PoolService {
   public ensureInitialized(): Promise<void> {
     return this.initializedPromise;
   }
-
-  public getPoolFromAddress(address: Address): Pool {
-    return this.poolConfigs.get(address);
-  }
-
 }
