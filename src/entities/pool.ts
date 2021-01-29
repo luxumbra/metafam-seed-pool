@@ -7,29 +7,15 @@ import { ContractNames, ContractsService } from "services/ContractsService";
 import { Address, EthereumService, fromWei } from "services/EthereumService";
 import { NumberService } from "services/numberService";
 import { ConsoleLogService } from "services/ConsoleLogService";
-import { EventConfigFailure } from "services/GeneralEvents";
-import { toBigNumberJs } from "services/BigNumberService";
-
-// export interface IPool extends IPoolConfig {
-//   crPool: any;
-//   bPool: any;
-//   assetTokens: Array<IErc20Token>;
-//   poolToken: IErc20Token;
-// }
 
 export interface IPoolTokenInfo extends ITokenInfo {
   tokenContract: IErc20Token;
-  price: number;
-  icon: string;
   balanceInPool: BigNumber;
   userShareInPool: number;
   denormWeight: BigNumber;
   denormWeightPercentage: number;
   normWeight: BigNumber;
   normWeightPercentage: number;
-  priceChangePercentage_24h: number;
-  priceChangePercentage_7d: number;
-  priceChangePercentage_30d: number;
 }
 
 @autoinject
@@ -107,8 +93,6 @@ export class Pool implements IPoolConfig {
       assetTokens.push(tokenInfo);
     }
 
-    await this.hydrateTokenPrices(assetTokens);
-
     await this.hydratePoolTokenBalances(assetTokens);
 
     await this.hydrateWeights(assetTokens);
@@ -123,28 +107,6 @@ export class Pool implements IPoolConfig {
     this.swapfee = await this.bPool.getSwapFee();
 
     return this;
-  }
-
-  async hydrateTokenPrices(tokens: Array<IPoolTokenInfo>): Promise<void> {
-    // const uri = `https://api.coingecko.com/api/v3/simple/price?ids=${tokens.reduce((accumulator, currentValue) => `${accumulator}%2C${currentValue.id}`, "")
-    //   }&vs_currencies=USD%2CUSD`;
-  
-    for (const token of tokens) {
-      const uri = `https://api.coingecko.com/api/v3/coins/${token.id}?market_data=true&localization=false&community_data=false&developer_data=false&sparkline=false`;
-
-      await axios.get(uri)
-        .then((response) => {
-          token.price = response.data.market_data.current_price.usd;
-          token.icon = response.data.image.thumb;
-          token.priceChangePercentage_24h = response.data.market_data.price_change_percentage_24h ?? 0;
-          token.priceChangePercentage_7d = response.data.market_data.price_change_percentage_7d ?? 0;
-          token.priceChangePercentage_30d = response.data.market_data.price_change_percentage_30d ?? 0;
-        })
-        .catch((error) => {
-          this.consoleLogService.handleFailure(
-            new EventConfigFailure(`PriceService: Error fetching token price ${error?.message}`));
-        });
-    }
   }
 
   async hydratePoolTokenBalances(tokens: Array<IPoolTokenInfo>): Promise<void> {

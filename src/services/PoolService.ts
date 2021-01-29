@@ -2,8 +2,6 @@ import { autoinject } from "aurelia-framework";
 import axios from "axios";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException } from "services/GeneralEvents";
-import { IErc20Token } from "services/TokenService";
-import { BigNumber } from "ethers";
 import { Container } from "aurelia-dependency-injection";
 import { Address, EthereumService } from "services/EthereumService";
 import { Pool } from "../entities/pool";
@@ -28,7 +26,9 @@ export interface IPoolConfig {
 @autoinject
 export class PoolService {
 
-  private poolConfigs: Map<Address, Pool>;
+  public poolConfigs: Map<Address, Pool>;
+  public initializing = true;
+  initializedPromise: Promise<void>;
   
   constructor(
     private ethereumService: EthereumService,
@@ -37,7 +37,10 @@ export class PoolService {
   ) {
   }
 
-  public async getPoolConfigs(): Promise<Map<Address, Pool>> {
+  public async initialize(): Promise<void> {
+    return this.initializedPromise = new Promise(
+      async (resolve: (value: void | PromiseLike<void>) => void,
+      reject: (reason?: any) => void): Promise<void> => {
     if (!this.poolConfigs?.size) {
       await axios.get("https://raw.githubusercontent.com/PrimeDAO/prime-pool-dapp/master/src/poolConfigurations/pools.json")
         .then(async (response) => {
@@ -47,17 +50,20 @@ export class PoolService {
             poolConfigs.set(pool.address, pool);
           }
           this.poolConfigs = poolConfigs;
+          this.initializing = false;
+          return resolve();
         })
         .catch((error) => {
           this.poolConfigs = new Map();
           this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", error));
+          this.initializing = false;
+          return reject();
         });
-    }
-
-    return this.poolConfigs;
+      }
+    });
   }
 
-  async createPoolFromConfig(config: IPoolConfigInternal): Promise<Pool> {
+  createPoolFromConfig(config: IPoolConfigInternal): Promise<Pool> {
     const poolConfig = {
       address: config.addresses[this.ethereumService.targetedNetwork],
       description: config.description,
@@ -66,6 +72,10 @@ export class PoolService {
     };
     const pool = this.container.get(Pool);
     return pool.initialize(poolConfig);
+  }
+
+  public ensureInitialized(): Promise<void> {
+    return this.initializedPromise;
   }
 
   public getPoolFromAddress(address: Address): Pool {

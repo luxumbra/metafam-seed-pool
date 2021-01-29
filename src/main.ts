@@ -6,6 +6,7 @@ import { EventConfigException } from "services/GeneralEvents";
 import { ConsoleLogService } from "services/ConsoleLogService";
 import { ContractsService } from "services/ContractsService";
 import { EventAggregator } from "aurelia-event-aggregator";
+import { PoolService } from "services/PoolService";
 
 export function configure(aurelia: Aurelia): void {
   aurelia.use
@@ -26,7 +27,7 @@ export function configure(aurelia: Aurelia): void {
     aurelia.use.plugin(PLATFORM.moduleName("aurelia-testing"));
   }
 
-  aurelia.start().then(() => {
+  aurelia.start().then(async () => {
     aurelia.container.get(ConsoleLogService);
     try {
       const ethereumService = aurelia.container.get(EthereumService);
@@ -35,6 +36,10 @@ export function configure(aurelia: Aurelia): void {
           (process.env.NETWORK as AllowedNetworks ?? Networks.Kovan) : Networks.Mainnet);
 
       aurelia.container.get(ContractsService);
+
+      const poolService = aurelia.container.get(PoolService);
+
+      poolService.initialize();
 
     } catch (ex) {
       const eventAggregator = aurelia.container.get(EventAggregator);

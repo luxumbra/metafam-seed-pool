@@ -1,3 +1,57 @@
 <template>
-  <h1>${message}</h1>
+  <div class="primeToken">
+    <div class="topSection">
+      <div class="firstRow">
+        <div class="logo">
+          <inline-svg svg.to-view="pool.icon"></inline-svg>
+        </div>
+        <div class="title">The PRIME Token</div>
+      </div>
+      <div class="secondRow">During liquidity campaigns, you can earn PRIME by providing liquidity to various Prime Pools.</div>
+    </div>
+    <div class="blobs">
+      <div class="blob supply">
+        <div class="title">Circulating Supply</div>
+        <div class="body">
+          <formatted-number value.to-view="totalSupply | ethwei"
+            average="false"
+            mantissa="2"></formatted-number>
+          PRIME
+        </div>
+      </div>
+      <div class="blob staked">
+        <div class="title">Staked</div>
+        <div class="body">
+          <div>
+            <formatted-number value.to-view="totalStaked | ethwei"
+              average="false"
+              mantissa="2"></formatted-number>
+            PRIME
+          </div>
+          <div>
+            <formatted-number value.to-view="percentStaked"
+              average="false"
+              mantissa="2"></formatted-number>%
+            of Circulating Supply
+          </div>
+        </div>
+      </div>
+      <div class="blob price">
+        <div class="title">Price</div>
+        <div class="body">
+          $<formatted-number value.to-view="tokenInfo.price"
+            average="false"
+            mantissa="2"></formatted-number> <span style="white-space: nowrap;">per PRIME</span>
+        </div>
+      </div>
+      <div class="description supply">The number of tokens publicly available and circulating in the market. This number can increase as PrimeDAO chooses to release additional tokens.</div>
+      <div class="description staked">The total PRIME tokens staked in different liquidity pools, or indexes.</div>
+      <div class="description price">The current value of PRIME, denominated in USD. Price history.</div>
+    </div>
+    <hr />
+    <div class="buttons">
+      <a class="button1" href="https://docs.primedao.io/primedao/products/poolmanager" target="_blank" rel="noopener noreferrer">Learn More</a>
+      <a class="button1" href="https://docs.primedao.io/primedao/products/poolmanager" target="_blank" rel="noopener noreferrer">Buy PRIME</a>
+    </div>
+  </div>
 </template>

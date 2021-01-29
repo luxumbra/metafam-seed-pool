@@ -5,6 +5,7 @@ import { Pool } from "entities/pool";
 import { EventAggregator } from "aurelia-event-aggregator";
 import { EventConfigException } from "services/GeneralEvents";
 import { Router } from "aurelia-router";
+import { Utils } from "services/utils";
 
 @singleton(false)
 @autoinject
@@ -40,8 +41,12 @@ export class Pools {
   async attached() {
     if (!this.pools?.length) {
       try {
-      setTimeout(() => this.eventAggregator.publish("dashboard.loading", true), 100);
-      this.pools = Array.from((await this.poolService.getPoolConfigs()).values());
+        if (this.poolService.initializing) {
+          await Utils.sleep(100);
+          this.eventAggregator.publish("dashboard.loading", true);
+          await this.poolService.ensureInitialized();
+        }
+        this.pools = Array.from(this.poolService.poolConfigs.values());
       } catch (ex) {
         this.eventAggregator.publish("handleException", new EventConfigException("Sorry, an error occurred", ex));
       }

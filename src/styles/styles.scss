@@ -35,6 +35,12 @@ html {
       }
     }
 
+    hr {
+      height: 1px;
+      border: none;
+      background-color: #eeeeee;
+    }
+
     a {
       color: $color-white;
       text-decoration: none;

@@ -1,7 +1,6 @@
 @import "styles/colors.scss";
 .home {
   color: $color-white;
-  padding: 40px;
 
   .divider {
     width: 48px;
@@ -143,11 +142,5 @@
     .towards {
       margin-bottom: 40px;
     }
-  }
-
-  hr {
-    height: 1px;
-    border: none;
-    background-color: #eeeeee;
   }
 }

@@ -82,7 +82,8 @@ export class PoolDashboard {
     private poolService: PoolService) {
   }
 
-  activate(model: { poolAddress: Address }) {
+  async activate(model: { poolAddress: Address }): Promise<void> {
+    await this.poolService.ensureInitialized();
     this.pool = this.poolService.getPoolFromAddress(model.poolAddress);
   }
 
