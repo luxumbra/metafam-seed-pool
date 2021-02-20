@@ -5,7 +5,7 @@ import { IErc20Token, ITokenInfo, TokenService } from "services/TokenService";
 import { autoinject } from "aurelia-framework";
 import { ContractNames, ContractsService } from "services/ContractsService";
 import { Address, fromWei } from "services/EthereumService";
-import { NumberService } from "services/numberService";
+import { NumberService } from "services/NumberService";
 
 export interface IPoolTokenInfo extends ITokenInfo {
   tokenContract: IErc20Token;
@@ -78,10 +78,10 @@ export class Pool implements IPoolConfig {
     const poolTokenInfo = (await this.tokenService.getTokenInfoFromAddress(crPoolAddress)) as IPoolTokenInfo;
     poolTokenInfo.tokenContract = this.crPool;
     this.poolToken = poolTokenInfo;
-    
+
     const assetTokenAddresses = await this.bPool.getCurrentTokens();
     const assetTokens = new Map<Address, IPoolTokenInfo>();
-    
+
     for (const tokenAddress of assetTokenAddresses) {
       const tokenInfo = (await this.tokenService.getTokenInfoFromAddress(tokenAddress)) as IPoolTokenInfo;
       tokenInfo.tokenContract =
@@ -98,7 +98,7 @@ export class Pool implements IPoolConfig {
     await this.hydrateWeights(assetTokensArray);
 
     this.hydrateTotalLiquidity(assetTokensArray);
-    
+
     this.assetTokens = assetTokens;
 
     this.poolTokenTotalSupply = await this.poolToken.tokenContract.totalSupply();
@@ -117,7 +117,7 @@ export class Pool implements IPoolConfig {
 
   hydrateTotalLiquidity(tokens: Array<IPoolTokenInfo>): void {
 
-    this.marketCap = tokens.reduce((accumulator, currentValue) => 
+    this.marketCap = tokens.reduce((accumulator, currentValue) =>
       accumulator + this.numberService.fromString(fromWei(currentValue.balanceInPool)) * currentValue.price, 0);
 
     this.totalMarketCapChangePercentage_24h = tokens.reduce((accumulator, currentValue) =>

@@ -6,7 +6,7 @@ import {
 } from "aurelia-framework";
 import { BigNumber } from "ethers";
 import { formatEther, parseEther } from "ethers/lib/utils";
-import { NumberService } from "services/numberService";
+import { NumberService } from "services/NumberService";
 
 @autoinject
 export class NumericInput {

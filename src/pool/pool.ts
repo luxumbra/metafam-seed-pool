@@ -10,7 +10,7 @@ import { EventConfigException, EventConfigFailure } from "services/GeneralEvents
 import { TokenService } from "services/TokenService";
 import { Router } from "aurelia-router";
 import { toBigNumberJs } from "services/BigNumberService";
-import { NumberService } from "services/numberService";
+import { NumberService } from "services/NumberService";
 import { PoolService } from "services/PoolService";
 import { Pool } from "entities/pool";
 

@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 import { toBigNumberJs } from "services/BigNumberService";
 import { ContractNames, ContractsService } from "services/ContractsService";
 import { EventConfigException } from "services/GeneralEvents";
-import { NumberService } from "services/numberService";
+import { NumberService } from "services/NumberService";
 import { PoolService } from "services/PoolService";
 import { ITokenInfo, TokenService } from "services/TokenService";
 import { Utils } from "services/utils";

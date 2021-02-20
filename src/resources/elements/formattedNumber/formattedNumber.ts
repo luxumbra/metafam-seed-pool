@@ -5,7 +5,7 @@ import {
   computedFrom,
   containerless
 } from "aurelia-framework";
-import { NumberService } from "services/numberService";
+import { NumberService } from "services/NumberService";
 import { Utils } from "services/utils";
 import tippy from "tippy.js";
 
