@@ -27,12 +27,12 @@
     "PriceOracle": "",
     "BalancerProxy": "",
     "BalancerPoolManager": "",
-    "BPool": "0xDD0B69d938c6E98bf8f16f04c4913A0c07E0bb6E",
+    "BPool": "0xea05a15dbce2eb543ffda16950e95b2bd2e40d0e",
     "ConfigurableRightsPool": "0x51A2310B37ead1D8F8Fe01B89b4Cd68FA58992d0",
     "LockingToken4Reputation": "",
     "WETH": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     "Avatar": "",
     "VestingFactory": "",
-    "PrimeToken": "0xE59064a8185Ed1Fca1D17999621eFedfab4425c9"
+    "PrimeToken": "0x30cf203b48edaa42c3b4918e955fed26cd012a3f"
   }
 }

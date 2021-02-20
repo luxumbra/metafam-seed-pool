@@ -26,13 +26,12 @@ export function configure(aurelia: Aurelia): void {
   if (environment.testing) {
     aurelia.use.plugin(PLATFORM.moduleName("aurelia-testing"));
   }
-
   aurelia.start().then(async () => {
     aurelia.container.get(ConsoleLogService);
     try {
       const ethereumService = aurelia.container.get(EthereumService);
       ethereumService.initialize(
-        process.env.NODE_ENV === "development" ? 
+        process.env.NODE_ENV === "development" ?
           (process.env.NETWORK as AllowedNetworks ?? Networks.Kovan) : Networks.Mainnet);
 
       aurelia.container.get(ContractsService);

@@ -1,118 +1,142 @@
 @import "styles/colors.scss";
+
 .appWrapper {
-  display: grid;
-  grid-template-columns: 190px 1fr;
-  grid-template-rows: auto;
-  grid-template-areas:
-    "logo header"
-    "sidebar mainContent";
-  height: 100%;
-
-  > .logo {
-    grid-area: logo;
-    background-color: $color-black;
-    align-items: center;
-    // just for vertical alignment of the logo
+    background-image: url('../static/mg-background.jpg');
+    background-attachment: fixed;
+    background-size: cover;
     display: flex;
-    justify-content: center;
+    flex-flow: column wrap;
+    align-content: flex-start;
+    // grid-template-columns: 190px 1fr;
+    // grid-template-rows: auto;
+    // grid-template-areas:
+    //     "logo header"
+    //     "sidebar mainContent";
+    height: 100vh;
+    max-width: 100vw;
 
-    img {
-      margin-right: 10px;
-    }
-  }
+    .appHeader {
+        grid-area: header;
+        text-align: right;
+        display: flex;
+        align-items: center;
+        background-color: $color-dark-purple;
+        z-index: 10000; // so everything will scroll under it
+        height: 76px;
 
-  .appHeader {
-    grid-area: header;
-    text-align: right;
-    display: flex;
-    align-items: center;
-    background-color: $color-black;
-    z-index: 10000; // so everything will scroll under it
-    height: 76px;
+        >.logo {
+            grid-area: logo;
+            background-color: $color-dark-purple;
+            align-items: center;
+            // just for vertical alignment of the logo
+            display: flex;
+            justify-content: center;
+            max-height: 76px;
 
-    .networkfeedback {
-      color: $color-white;
-      margin-left: 10px;
-      text-align: left;
-      .testnet {
-        color: $color-red;
-      }
-    }
-
-    .connectButton {
-      flex-grow: 2;
-      padding-right: 20px;
-      padding-top: 12px;
-      padding-bottom: 12px;
-    }
-  }
-
-  .sidebarContainer {
-    .sidebar {
-      grid-area: sidebar;
-      padding: 20px 0;
-
-      .menuitems {
-        margin-bottom: 20px;
-        a.item {
-          display: block;
-          margin-bottom: 6px;
-          padding: 14px 20px;
-
-          &.active,
-          &:hover {
-            background-color: #9478ff;
-            border-right: 6px solid #694ae2;
-          }
-        }
-      }
-
-      .appFooter {
-        padding: 0 20px;
-        position: fixed;
-        bottom: 30px;
-        .links {
-          text-decoration: underline;
-          font-size: 11px;
-          margin-bottom: 16px;
-          display: flex;
-          justify-content: space-between;
-        }
-
-        .social {
-          border-bottom: 2px solid #1ee0fc;
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 16px;
-          padding-bottom: 16px;
-
-          a {
             img {
-              width: 16px;
+                margin-right: 10px;
             }
-          }
         }
 
-        .logo {
-          align-items: center;
-          display: flex;
-          img {
-            width: 24px;
-            margin-right: 6px;
-          }
-          .text {
-            font-size: 6px;
-            display: inline-block;
-          }
+        .networkfeedback {
+            color: $color-white;
+            margin-left: 10px;
+            text-align: left;
+
+            .testnet {
+                color: $brand-pink;
+            }
         }
-      }
+
+        .connectButton {
+            flex-grow: 2;
+            padding-right: 20px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
     }
-  }
 
-  .mainContent {
-    grid-area: mainContent;
-    background-color: $color-white;
-    color: $color-black;
-    padding: 60px;
-  }
+    main {
+        display: flex;
+        flex-flow: row nowrap;
+        width: 100vw;
+    }
+
+    .sidebarContainer {
+        background-color: transparent;
+        flex: 0 1 300px;
+        width: 300px;
+
+        .sidebar {
+            grid-area: sidebar;
+            padding: 20px 0;
+
+            .menuitems {
+                margin-bottom: 20px;
+
+                a.item {
+                    color: $color-body-text;
+                    display: block;
+                    margin-bottom: 6px;
+                    padding: 14px 20px;
+
+                    &.active,
+                    &:hover {
+                        background-color: #9478ff;
+                        border-right: 6px solid #694ae2;
+                    }
+                }
+            }
+
+            .appFooter {
+                padding: 0 20px;
+                position: fixed;
+                bottom: 30px;
+
+                .links {
+                    text-decoration: underline;
+                    font-size: 11px;
+                    margin-bottom: 16px;
+                    display: flex;
+                    justify-content: space-between;
+                }
+
+                .social {
+                    border-bottom: 2px solid #1ee0fc;
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 16px;
+                    padding-bottom: 16px;
+
+                    a {
+                        img {
+                            width: 16px;
+                        }
+                    }
+                }
+
+                .logo {
+                    align-items: center;
+                    display: flex;
+
+                    img {
+                        width: 24px;
+                        margin-right: 6px;
+                    }
+
+                    .text {
+                        font-size: 6px;
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+    }
+
+    .mainContent {
+        grid-area: mainContent;
+        background-color: transparent;
+        color: $color-body-text;
+        padding: 60px;
+    }
 }

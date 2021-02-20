@@ -1,146 +1,165 @@
 @import "styles/colors.scss";
+@import "styles/typography.scss";
+@import "styles/mixins.scss";
+
 .home {
-  color: $color-white;
+    color: $color-body-text;
 
-  .divider {
-    width: 48px;
-    border-bottom: 2px solid #1ee0fc;
-    padding-top: 16px;
-    margin-bottom: 16px;
-  }
-
-  > .title {
-    font-family: "Cera Pro";
-    font-size: 36px;
-    line-height: 56px;
-    color: $color-light-purple;
-    text-align: center;
-    margin-top: 50px;
-    margin-bottom: 30px;
-  }
-
-  .banner {
-    box-shadow: 3px 3px 8px #00000029;
-    border-radius: 20px;
-    padding: 60px;
-
-    .title {
-      font-size: 52px;
-      line-height: 56px;
-      font-family: "Cera Pro";
+    .divider {
+        width: 48px;
+        border-bottom: 2px solid #1ee0fc;
+        padding-top: 16px;
+        margin-bottom: 16px;
     }
 
-    .subtitle {
-      font-size: 27px;
-      line-height: 21px;
+    >.title {
+        font-family: $font-display;
+        font-size: 36px;
+        line-height: 56px;
+        color: $color-body-text;
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 30px;
     }
 
-    .body {
-      font-size: 21px;
-      line-height: 25px;
-    }
-  }
+    .banner {
+        box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.15);
+        border-radius: 20px;
+        padding: 60px;
 
-  .benefits {
-    display: flex;
-    justify-content: space-between;
+        .title {
+            font-size: 52px;
+            line-height: 56px;
+            margin-bottom: 30px;
+            font-family: $font-display-alt;
+        }
 
-    .title {
-      font-family: "Cera Pro";
-      font-size: 27px;
-      line-height: 27px;
-      display: flex;
-      justify-content: space-between;
-      padding-bottom: 27px;
-      margin-bottom: 27px;
-      border-bottom: 2px solid $color-lightblue;
+        .subtitle {
+            font-size: 27px;
+            line-height: 21px;
+        }
+
+        .body {
+            font-size: 21px;
+            line-height: 25px;
+        }
     }
 
-    .access {
-      background-color: $color-bluegreen;
-    }
-    .safe {
-      background-color: $color-light-purple;
-    }
-    .mgmt {
-      background-color: $color-darkpink;
-    }
-    .access,
-    .safe,
-    .mgmt {
-      width: 26%;
-      box-shadow: 3px 3px 8px #00000029;
-      border-radius: 0px 0px 20px 20px;
-      border-top: 6px solid $color-lightblue;
-      padding: 26px;
-      padding-bottom: 26px;
+    .benefits {
+        display: flex;
+        justify-content: space-between;
 
-      .body {
+        .title {
+            font-family: $font-display;
+            font-size: 27px;
+            line-height: 27px;
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 27px;
+            margin-bottom: 27px;
+            border-bottom: 2px solid $color-lightblue;
+        }
+
+        .access,
+        .safe,
+        .mgmt {
+            @include cardStyle;
+            flex: 0 0 32%;
+            max-width: 32%;
+            margin: 25px 0;
+        }
+
+        // .access {
+        //     background-color: $color-bluegreen;
+        // }
+
+        // .safe {
+        //     background-color: $color-light-purple;
+        // }
+
+        // .mgmt {
+        //     background-color: $color-darkpink;
+        // }
+
+        // .access,
+        // .safe,
+        // .mgmt {
+        //     width: 26%;
+        //     box-shadow: 3px 3px 8px #00000029;
+        //     border-radius: 0px 0px 20px 20px;
+        //     border-top: 6px solid $color-lightblue;
+        //     padding: 26px;
+        //     padding-bottom: 26px;
+
+        //     .body {
+        //         font-size: 21px;
+        //         line-height: 25px;
+        //     }
+
+        //     img {
+        //         width: 28px;
+        //     }
+        // }
+    }
+
+    .getStarted {
+        @include cardStyle;
+        // padding: 30px;
+        // box-shadow: 3px 3px 8px #00000029;
+        // border-radius: 0px 0px 20px 20px;
+        // color: $color-white;
+        // border-top: 6px solid $color-pink;
+        // background-color: $color-light-purple;
+        // display: flex;
+        // justify-content: start;
+        // align-items: center;
+        // text-align: center;
+        // font-size: 21px;
+        // line-height: 25px;
+
+        .blob {
+            padding-right: 30px;
+
+            img {
+                width: 384px;
+            }
+        }
+
+        .diveIn {
+            .title {
+                font-weight: bold;
+                font-family: "Cera Pro";
+                font-size: 27px;
+                line-height: 56px;
+            }
+
+            .divider {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .already {
+                margin-bottom: 16px;
+            }
+
+            .browse,
+            .needMore {
+                margin-bottom: 24px;
+            }
+        }
+    }
+
+    .invitation {
         font-size: 21px;
         line-height: 25px;
-      }
+        color: $color-black;
+        width: 465px;
+        margin: auto;
+        text-align: center;
+        margin-bottom: 40px;
 
-      img {
-        width: 28px;
-      }
+        .towards {
+            margin-bottom: 40px;
+        }
     }
-  }
-
-  .getStarted {
-    padding: 30px;
-    box-shadow: 3px 3px 8px #00000029;
-    border-radius: 0px 0px 20px 20px;
-    color: $color-white;
-    border-top: 6px solid $color-pink;
-    background-color: $color-light-purple;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    text-align: center;
-    font-size: 21px;
-    line-height: 25px;
-
-    .blob {
-      padding-right: 30px;
-      img {
-        width: 384px;
-      }
-    }
-
-    .diveIn {
-      .title {
-        font-weight: bold;
-        font-family: "Cera Pro";
-        font-size: 27px;
-        line-height: 56px;
-      }
-
-      .divider {
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .already {
-        margin-bottom: 16px;
-      }
-
-      .browse,
-      .needMore {
-        margin-bottom: 24px;
-      }
-    }
-  }
-
-  .invitation {
-    font-size: 21px;
-    line-height: 25px;
-    color: $color-black;
-    width: 465px;
-    margin: auto;
-    text-align: center;
-    margin-bottom: 40px;
-    .towards {
-      margin-bottom: 40px;
-    }
-  }
 }
