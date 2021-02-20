@@ -19,7 +19,7 @@
   },
   "mainnet": {
     "RightsManager": "0xFd069b1d2daC3d1C277BeFa8E51Aad77D9f9167B",
-    "SmartPoolManager": "0x8DBB8C9bFEb7689f16772c85136993cDA0c05eA4",
+    "SmartPoolManager": "0x414Edccf87399c0D14a23A3A869Aa3c84b23D63a",
     "BFactory": "0x9424B1412450D0f8Fc2255FAf6046b98213B76Bd",
     "BalancerSafeMath": "0xCfE28868F6E0A24b7333D22D8943279e76aC2cdc",
     "CRPFactory": "0xed52D8E202401645eDAD1c0AA21e872498ce47D0",

@@ -1,0 +1,60 @@
+<template>
+  <div class="seedToken">
+    <div class="topSection">
+      <div class="firstRow">
+        <!-- <div class="logo">
+          <inline-svg svg.to-view="pool.icon"></inline-svg>
+        </div> -->
+        <div class="title">The SEED Token</div>
+      </div>
+      <div class="mmButton"><button if.one-time="showMMButton" class="button1" click.delegate="addToMetamask()"><img src="/metamask-logo-png-transparent.png" />Add token to MetaMask to see it in your wallet</button></div>
+      <div class="secondRow">During liquidity campaigns, you can earn SEED by providing liquidity to the SEED pool.</div>
+    </div>
+    <div class="blobs">
+      <div class="blob supply">
+        <div class="title">Circulating Supply</div>
+        <div class="body">
+          <formatted-number value.to-view="totalSupply | ethwei"
+            average="false"
+            thousands-separated="true"
+            mantissa="2"></formatted-number>
+          SEED
+        </div>
+      </div>
+      <div class="blob staked">
+        <div class="title">Staked</div>
+        <div class="body">
+          <div>
+            <formatted-number value.to-view="totalStaked | ethwei"
+              average="false"
+              thousands-separated="true"
+              mantissa="2"></formatted-number>
+            SEED
+          </div>
+          <div>
+            <formatted-number value.to-view="percentStaked"
+              average="false"
+              mantissa="2"></formatted-number>%
+            of Circulating Supply
+          </div>
+        </div>
+      </div>
+      <div class="blob price">
+        <div class="title">Price</div>
+        <div class="body">
+          $<formatted-number value.to-view="tokenInfo.price"
+            average="false"
+            mantissa="2"></formatted-number> <span style="white-space: nowrap;">per SEED Token</span>
+        </div>
+      </div>
+      <div class="description supply">The number of tokens publicly available and circulating in the market. This number can increase as MetaGame mints more tokens as the result of work done in the community and on the Platform.</div>
+      <div class="description staked">The total SEED tokens staked in the SEED pool.</div>
+      <div class="description price">The current value of SEED, denominated in USD. Price history.</div>
+    </div>
+    <hr />
+    <div class="buttons">
+      <a class="button1" href="https://wiki.metagame.wtf" target="_blank" rel="noopener noreferrer">Learn More</a>
+      <a class="button1" href="https://balancer.exchange/#/swap" target="_blank" rel="noopener noreferrer">Buy SEED</a>
+    </div>
+  </div>
+</template>

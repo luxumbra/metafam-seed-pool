@@ -1,11 +1,14 @@
 @import "styles/colors.scss";
 
+
+
 .dashboardContainer {
     display: flex;
     justify-content: center;
-    padding-top: 70px;
-    padding-left: 80px;
-    padding-right: 80px;
+    flex-flow: row wrap;
+    padding-top: 0;
+    // padding-left: 80px;
+    // padding-right: 80px;
     padding-bottom: 40px;
 
 
@@ -26,8 +29,8 @@
     .farming {
         text-align: left;
         margin-bottom: 25px;
-        min-width: 290px;
-        max-width: 290px;
+        min-width: 350px;
+        max-width: 350px;
 
         .moreinfo {
             display: flex;
@@ -75,8 +78,11 @@
     }
 
     .learnmore {
-        border-top: 4px solid $color-lightblue;
+        border-bottom: 4px solid $brand-pink;
         padding-top: 30px;
+        flex: 0 1 100%;
+        min-width: 100%;
+        width: 100%;
 
         .image {
             text-align: center;

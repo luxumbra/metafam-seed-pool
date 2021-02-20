@@ -76,7 +76,7 @@ export class App {
         nav: true,
         name: "pools",
         route: ["pools"],
-        title: "All Pools",
+        title: "SEED Pool",
       }
       , {
         moduleId: PLATFORM.moduleName("./txHistory/tx-history"),
@@ -85,21 +85,21 @@ export class App {
         route: ["txHistory"],
         title: "Transaction History",
       }
+    //   , {
+    //     moduleId: PLATFORM.moduleName("./documentation/documentation"),
+    //     nav: true,
+    //     name: "documentation",
+    //     route: ["documentation"],
+    //     title: "Documentation",
+    //   }
       , {
-        moduleId: PLATFORM.moduleName("./documentation/documentation"),
+        moduleId: PLATFORM.moduleName("./seedToken/seed-token"),
         nav: true,
-        name: "documentation",
-        route: ["documentation"],
-        title: "Documentation",
+        name: "seedToken",
+        route: ["seedToken"],
+        title: "The SEED Token",
       }
-      , {
-        moduleId: PLATFORM.moduleName("./primeToken/prime-token"),
-        nav: true,
-        name: "primeToken",
-        route: ["primeToken"],
-        title: "The PRIME Token",
-      }
-      , 
+      ,
       {
         moduleId: PLATFORM.moduleName("./pool/pool"),
         name: "pool",

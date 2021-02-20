@@ -2,9 +2,12 @@
 @import "./typography";
 @import "./dialogs";
 @import "tippy.js/dist/tippy.css"; // TODO: use CDN?
+@import "styles/mixins.scss";
 
 
 html {
+    scroll-behavior: smooth;
+
     body {
         margin: 0;
         background-color: $global-background-color;
@@ -61,23 +64,27 @@ html {
         .page {
             .title {
                 font-size: 34px;
-                font-family: "Press Start 2P";
+                font-family: $font-display;
                 margin-bottom: 18px;
             }
         }
 
         .heading1 {
             font-size: 18px;
-            font-family: "Press Start 2P";
+            font-family: $font-display;
             margin-bottom: 8px;
             position: relative; // for triangle z-index to work
             color: $color-body-text;
             width: 60%;
+
+            &.subtitle {
+                font-family: $font-body;
+            }
         }
 
         .heading2 {
             font-size: 24px;
-            font-family: "IBM Plex Mono";
+            font-family: $font-display-alt;
             white-space: nowrap;
         }
 
@@ -94,20 +101,21 @@ html {
         .button4,
         .buttonBw {
             border-radius: $global-button-radius;
-            padding: 6px 48px;
+            padding: 6px 15px;
             padding-bottom: 8px;
-            font-family: "Cera Pro";
+            font-family: $font-body;
             font-size: 12px;
             color: $color-white;
             border: 2px solid $color-white;
             outline: none;
-            box-shadow: 3px 3px 8px #00000029;
+            box-shadow: 0 0 8px #00000029;
             white-space: nowrap;
             background-color: transparent;
+            transition: all 0.2s ease;
 
             &:hover {
-                background-color: $color-black;
-                border-color: $color-black;
+                background-color: $brand-purple;
+                border-color: $brand-cyan;
                 color: $color-white;
                 text-decoration: none;
             }
@@ -142,25 +150,26 @@ html {
             border: 2px solid $color-green;
         }
 
-        .triangle {
-            position: absolute;
-            transform: translateY(-21px);
+        // .triangle {
+        //     position: absolute;
+        //     transform: translateY(-21px);
 
-            img {
-                width: 0;
-                height: 0;
-                border-style: solid;
-                border-width: 0 0 38px 38px;
-                border-color: transparent transparent $triangle-color transparent;
-                display: inline-block;
-            }
-        }
+        //     img {
+        //         width: 0;
+        //         height: 0;
+        //         border-style: solid;
+        //         border-width: 0 0 38px 38px;
+        //         border-color: transparent transparent $triangle-color transparent;
+        //         display: inline-block;
+        //     }
+        // }
 
         .sectionStyles {
+            @include cardStyle;
             font-size: 12px;
             letter-spacing: 0.6px;
             line-height: 15px;
-            background-color: $section-background-color;
+            // background-color: $section-background-color;
 
             a {
                 text-decoration: underline;
@@ -182,11 +191,15 @@ html {
                 border-bottom-left-radius: 0;
                 border-bottom-right-radius: 0;
                 border-bottom: none;
-                padding-top: 60px;
+                // padding-top: 60px;
                 padding-bottom: 12px;
 
                 >div {
                     margin-bottom: 16px;
+                }
+
+                .heading1 {
+                    line-height: 1.22;
                 }
             }
 
